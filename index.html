@@ -16,7 +16,7 @@
       color: #1de9b6;
     }
     .table-container {
-      overflow-x: auto; /* Küçük ekranlarda tabloyu kaydırılabilir yapar */
+      overflow-x: auto;
     }
     table {
       width: 100%;
@@ -25,7 +25,7 @@
       background: #1f1f1f;
       border-radius: 16px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-      overflow: hidden; /* Köşelerin yuvarlak kalmasını sağlar */
+      overflow: hidden;
     }
     th, td {
       padding: 14px;
@@ -38,7 +38,7 @@
       font-weight: bold;
     }
     tr:last-child td {
-      border-bottom: none; /* Son satırın alt çizgisini kaldırır */
+      border-bottom: none;
     }
     tr:hover {
       background-color: #2c3e50;
@@ -87,24 +87,74 @@
       display: none !important;
     }
     .match-tag {
-        padding: 4px 10px;
-        border-radius: 12px;
-        font-weight: bold;
-        font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 12px;
     }
     .tag-league {
-        background-color: rgba(29, 233, 182, 0.2);
-        color: #1de9b6;
-        border: 1px solid #1de9b6;
+      background-color: rgba(29, 233, 182, 0.2);
+      color: #1de9b6;
+      border: 1px solid #1de9b6;
     }
     .tag-friendly {
-        background-color: rgba(158, 158, 158, 0.2);
-        color: #9e9e9e;
-        border: 1px solid #9e9e9e;
+      background-color: rgba(158, 158, 158, 0.2);
+      color: #9e9e9e;
+      border: 1px solid #9e9e9e;
+    }
+    /* Bildirim butonu sağ üstte */
+   #notifyBtn {
+  position: fixed;
+  top: 22;
+  right: 15px;
+  background-color: #1de9b6;
+  color: black;
+  font-weight: bold;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 25%;
+  cursor: pointer;
+  z-index: 9999;
+  font-size: 13px;
+  width: 110px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: background-color 0.3s ease;
+}
+
+#notifyBtn:hover {
+  background-color: #00b386;
+}
+
+    /* Animasyonlu popup bildirim */
+    #popupNotification {
+      position: fixed;
+      top: 20px;
+      right: -400px;
+      background: #1de9b6;
+      color: black;
+      font-weight: bold;
+      padding: 15px 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      transition: right 0.5s ease-in-out, opacity 0.5s;
+      z-index: 9999;
+      font-family: 'Montserrat', sans-serif;
+      opacity: 0;
     }
   </style>
 </head>
 <body>
+
+  <button id="notifyBtn">🔔 Bildirimleri Aç</button>
+
+  <div id="popupNotification">
+    <span id="popupTitle">Başlık</span><br>
+    <span id="popupBody" style="font-weight: normal;">Mesaj içeriği</span>
+  </div>
 
   <h1>YeşilTepe Futbol Turnuvası</h1>
 
@@ -184,9 +234,9 @@
     </select>
     <div style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
       <select id="team1" style="flex:1"></select>
-      <input type="number" id="score1" placeholder="Skor" min="0" style="flex:0.5;"/>
+      <input type="number" id="score1" placeholder="Skor" min="0" style="flex:0.5;" />
       <span>-</span>
-      <input type="number" id="score2" placeholder="Skor" min="0" style="flex:0.5;"/>
+      <input type="number" id="score2" placeholder="Skor" min="0" style="flex:0.5;" />
       <select id="team2" style="flex:1"></select>
     </div>
     <button id="addPastMatchBtn">Skoru Ekle</button>
@@ -195,9 +245,9 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, set, onValue, update, push, runTransaction } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+    import { getDatabase, ref, set, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
-    // Firebase yapılandırma - KENDİ BİLGİLERİNLE DEĞİŞTİR
+    // Firebase yapılandırma
     const firebaseConfig = {
       apiKey: "AIzaSyC_4leEyiGLUg4pF420WtQOC2om-OyWoEU",
       authDomain: "futbol-1e4a5.firebaseapp.com",
@@ -209,7 +259,6 @@
       measurementId: "G-ZF51DF32W7"
     };
 
-    // Firebase başlat
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
@@ -227,7 +276,6 @@
     const enterPinBtn = document.getElementById("enterPinBtn");
     const keypadButtons = document.querySelectorAll("#keypadButtons button[data-key]");
 
-    // Admin Panel Form elemanları
     const teamNameInput = document.getElementById("teamName");
     const addTeamBtn = document.getElementById("addTeamBtn");
 
@@ -241,10 +289,16 @@
     const team2Select = document.getElementById("team2");
     const score1Input = document.getElementById("score1");
     const score2Input = document.getElementById("score2");
-    const matchTypeSelect = document.getElementById("matchTypeSelect"); // YENİ
+    const matchTypeSelect = document.getElementById("matchTypeSelect");
     const addPastMatchBtn = document.getElementById("addPastMatchBtn");
 
-    // Admin panel açma kapama & şifre yönetimi
+    // Bildirim butonu
+    const notifyBtn = document.getElementById("notifyBtn");
+    const popup = document.getElementById("popupNotification");
+    const popupTitle = document.getElementById("popupTitle");
+    const popupBody = document.getElementById("popupBody");
+
+    // Admin panel açma/kapama & şifre yönetimi
     let pin = "";
     openAdminBtn.addEventListener("click", () => {
       if (!adminPanel.classList.contains("hidden")) {
@@ -281,7 +335,7 @@
       pin = "";
       pinDisplay.value = "";
     });
-    
+
     // Takımları Firebase'den çek ve tablo olarak göster
     function renderTeams(snapshot) {
       rankingBody.innerHTML = "";
@@ -289,7 +343,7 @@
       snapshot.forEach(childSnap => {
         teams.push(childSnap.val());
       });
-      // Takımları puana göre sırala
+
       teams.sort((a,b) => (b.points || 0) - (a.points || 0));
 
       teams.forEach((team, i) => {
@@ -303,11 +357,11 @@
         `;
         rankingBody.appendChild(tr);
       });
-      // Dropdown'ları güncelle
+
       updateDropdowns(teams);
     }
 
-    // Dropdownları güncelle (takımlar)
+    // Dropdownları güncelle
     function updateDropdowns(teams) {
       [teamASelect, teamBSelect, team1Select, team2Select].forEach(sel => {
         const currentVal = sel.value;
@@ -322,16 +376,14 @@
       });
     }
 
-    // Firebase "teams" referansı
     const teamsRef = ref(db, "teams");
     onValue(teamsRef, renderTeams);
 
-    // Takım ekleme (puan ve mağlubiyet ile)
+    // Takım ekleme
     addTeamBtn.addEventListener("click", async () => {
       const name = teamNameInput.value.trim();
       if (!name) return alert("Takım adı boş olamaz!");
       const teamRef = ref(db, "teams/" + name);
-      // Yeni takımı 0 istatistikle başlat
       await set(teamRef, { name, wins: 0, losses: 0, points: 0 });
       teamNameInput.value = "";
       alert(`${name} takımı eklendi!`);
@@ -348,6 +400,7 @@
       upcomingMatchText.textContent = `${data.teamA} vs ${data.teamB}`;
       upcomingMatchTime.textContent = `Tarih: ${data.date} | Saat: ${data.time}`;
     }
+
     const upcomingMatchRef = ref(db, "upcomingMatch");
     onValue(upcomingMatchRef, renderUpcomingMatch);
 
@@ -361,11 +414,15 @@
       if (teamA === teamB) return alert("Takımlar farklı olmalı!");
       await set(upcomingMatchRef, { teamA, teamB, date, time });
       alert("Yaklaşan maç güncellendi");
+
+      // Bildirim gönder
+      notifyAll("Turnuva Duyuru", `${teamA} vs ${teamB} maçı eklendi!`);
+
       matchDateInput.value = "";
       matchTimeInput.value = "";
     });
 
-    // GÜNCELLENDİ: Geçmiş maçları listele (en yeni en üstte)
+    // Geçmiş maçları listele
     const pastMatchesRef = ref(db, "pastMatches");
     onValue(pastMatchesRef, snapshot => {
       pastMatchesBody.innerHTML = "";
@@ -374,15 +431,14 @@
         matches.push(childSnap.val());
       });
 
-      // Maçları ters çevirerek en yeninin en üstte olmasını sağla
       matches.reverse();
 
       matches.forEach(m => {
         let tagHtml = '';
         if (m.type === 'Lig') {
-            tagHtml = `<span class="match-tag tag-league">LİG Maçı</span>`;
+          tagHtml = `<span class="match-tag tag-league">LİG Maçı</span>`;
         } else if (m.type === 'Hazırlık') {
-            tagHtml = `<span class="match-tag tag-friendly">Hazırlık Maçı</span>`;
+          tagHtml = `<span class="match-tag tag-friendly">Hazırlık Maçı</span>`;
         }
 
         const tr = document.createElement("tr");
@@ -391,57 +447,110 @@
       });
     });
 
-    // GÜNCELLENDİ: Skor ekleme (Puanlama maç türüne göre)
+    // Skor ekleme
     addPastMatchBtn.addEventListener("click", async () => {
       const team1 = team1Select.value;
       const team2 = team2Select.value;
       const score1 = parseInt(score1Input.value);
       const score2 = parseInt(score2Input.value);
-      const matchType = matchTypeSelect.value; // YENİ: Maç türünü al
+      const type = matchTypeSelect.value;
 
       if (!team1 || !team2) return alert("Takımları seçin");
-      if (team1 === team2) return alert("Takımlar farklı olmalı!");
-      if (isNaN(score1) || isNaN(score2) || score1 < 0 || score2 < 0) return alert("Geçerli skorlar girin");
+      if (team1 === team2) return alert("Takımlar farklı olmalı");
+      if (isNaN(score1) || isNaN(score2)) return alert("Geçerli skor girin");
 
-      // Skoru ve maç türünü kaydet
       const newMatchRef = push(pastMatchesRef);
-      await set(newMatchRef, { team1, team2, score1, score2, type: matchType });
+      await set(newMatchRef, { team1, team2, score1, score2, type });
 
-      // Sadece LİG maçları için puanlama yap
-      if (matchType === 'Lig') {
-        if (score1 === score2) {
-            alert("Maç berabere bitti. Puanlama yapılmadı.");
-        } else {
-            const winnerName = score1 > score2 ? team1 : team2;
-            const loserName = score1 > score2 ? team2 : team1;
+      // Puan güncellemesi sadece Lig maçlarında
+      if (type === "Lig") {
+        // Takım1 puan ve galibiyet/malubiyet
+        const team1Ref = ref(db, "teams/" + team1);
+        runTransaction(team1Ref, team => {
+          if (team) {
+            if (score1 > score2) {
+              team.wins = (team.wins || 0) + 1;
+              team.points = (team.points || 0) + 3;
+            } else {
+              team.losses = (team.losses || 0) + 1;
+            }
+          }
+          return team;
+        });
 
-            // Kazanan takımın bilgilerini güncelle (3 puan, 1 galibiyet)
-            const winnerRef = ref(db, 'teams/' + winnerName);
-            runTransaction(winnerRef, (team) => {
-                if (team) {
-                    team.wins = (team.wins || 0) + 1;
-                    team.points = (team.points || 0) + 3;
-                }
-                return team;
-            });
-
-            // Kaybeden takımın bilgilerini güncelle (1 mağlubiyet)
-            const loserRef = ref(db, 'teams/' + loserName);
-            runTransaction(loserRef, (team) => {
-                if (team) {
-                    team.losses = (team.losses || 0) + 1;
-                }
-                return team;
-            });
-        }
+        // Takım2 puan ve galibiyet/malubiyet
+        const team2Ref = ref(db, "teams/" + team2);
+        runTransaction(team2Ref, team => {
+          if (team) {
+            if (score2 > score1) {
+              team.wins = (team.wins || 0) + 1;
+              team.points = (team.points || 0) + 3;
+            } else {
+              team.losses = (team.losses || 0) + 1;
+            }
+          }
+          return team;
+        });
       }
 
-      // Formu temizle
+      alert("Skor başarıyla eklendi!");
+
+      // Bildirim gönder
+      notifyAll("Turnuva Duyuru", `${team1} ${score1} - ${score2} ${team2} skoru eklendi!`);
+
+      // Alanları temizle
       score1Input.value = "";
       score2Input.value = "";
-      alert("Maç skoru başarıyla eklendi!");
     });
-  </script>
 
+    // Bildirim izni isteme ve bildirim gönderme
+    function sendNotification(title, body) {
+      if (!("Notification" in window)) return console.log("Tarayıcı bildirim desteklemiyor.");
+      if (Notification.permission === "granted") {
+        new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/5968/5968885.png" });
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/5968/5968885.png" });
+          }
+        });
+      }
+    }
+
+    // Animasyonlu popup bildirim gösterme
+    function showAnimatedNotification(title, message) {
+      popupTitle.textContent = title;
+      popupBody.textContent = message;
+      popup.style.right = "20px";
+      popup.style.opacity = "1";
+
+      setTimeout(() => {
+        popup.style.right = "-400px";
+        popup.style.opacity = "0";
+      }, 4000);
+    }
+
+    // Bildirim ve animasyonu birlikte çalıştıran fonksiyon
+    function notifyAll(title, message) {
+      sendNotification(title, message);
+      showAnimatedNotification(title, message);
+    }
+
+    // Bildirim butonu tıklama olayı
+    notifyBtn.addEventListener("click", () => {
+      if (Notification.permission === "granted") {
+        alert("Bildirim izni zaten verilmiş.");
+      } else {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            alert("Bildirim izni verildi.");
+          } else {
+            alert("Bildirim izni reddedildi.");
+          }
+        });
+      }
+    });
+
+  </script>
 </body>
 </html>
