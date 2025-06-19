@@ -164,13 +164,113 @@
                 font-size: 14px;
             }
         }
+
+        /* --- Custom Alert Styles --- */
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .custom-alert-overlay.show {
+            opacity: 1;
+        }
+        .custom-alert-modal {
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            transform: translateY(-100px); /* Başlangıçta yukarıda gizli */
+            transition: transform 0.4s ease-out, border-color 0.1s ease-in-out;
+            border: 2px solid transparent; /* Varsayılan şeffaf çerçeve */
+            opacity: 0; /* Başlangıçta gizli */
+            animation: slideInFromTop 0.4s ease-out forwards; /* Başlangıç animasyonu */
+        }
+
+        .custom-alert-modal.warning {
+            border-color: #ff9100;
+            animation: slideInFromTop 0.4s ease-out forwards, blinkRedBorderWarning 1s infinite alternate;
+        }
+        .custom-alert-modal.success {
+            border-color: #1de9b6;
+        }
+        .custom-alert-modal.error {
+            border-color: #ff4d4d;
+            animation: slideInFromTop 0.4s ease-out forwards, blinkRedBorderError 1s infinite alternate;
+        }
+
+        .custom-alert-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #1de9b6; /* Başlık rengi */
+        }
+        .custom-alert-header.warning { color: #ff9100; }
+        .custom-alert-header.success { color: #1de9b6; }
+        .custom-alert-header.error { color: #ff4d4d; }
+
+        .custom-alert-body {
+            font-size: 18px;
+            line-height: 1.5;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        /* Keyframe Animations */
+        @keyframes slideInFromTop {
+            from {
+                transform: translateY(-200px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes blinkRedBorderWarning {
+            0% { border-color: #ff9100; }
+            50% { border-color: rgba(255, 145, 0, 0.4); }
+            100% { border-color: #ff9100; }
+        }
+        @keyframes blinkRedBorderError {
+            0% { border-color: #ff4d4d; }
+            50% { border-color: rgba(255, 77, 77, 0.4); }
+            100% { border-color: #ff4d4d; }
+        }
+
+        /* Modal'ı gizlemek için animasyon (isteğe bağlı, auto-remove olduğu için) */
+        .custom-alert-modal.hide {
+            animation: slideOutToTop 0.3s ease-in forwards;
+        }
+        @keyframes slideOutToTop {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
 
     <h1>YeşilTepe Futbol Turnuvası</h1>
 
-    
+
 
     <h2>Takım Sıralaması</h2>
     <div class="table-container">
@@ -225,15 +325,8 @@
             <button type="button" data-key="0">0</button>
             <button type="button" id="enterPinBtn">Giriş</button>
         </div>
-        
     </div>
 
-        <div class="notification-settings">
-        <h3>Bildirim Ayarları</h3>
-        <button id="toggleNotificationsBtn">Bildirimleri Aç</button>
-        <div id="notificationStatus" class="notification-status">Bildirim Durumu: Bilinmiyor</div>
-        <p style="font-size:12px; color:#ff9100; text-align:center;">Not: Bildirimler sadece site tarayıcıda açıkken gönderilecektir.</p>
-    </div>
     <div class="admin-panel hidden" id="adminPanel">
         <h3>Takım Ekle</h3>
         <input type="text" id="teamName" placeholder="Takım Adı" />
@@ -263,7 +356,12 @@
         </div>
         <button id="addPastMatchBtn">Skoru Ekle</button>
     </div>
-
+    <div class="notification-settings">
+        <h3>Bildirim Ayarları</h3>
+        <button id="toggleNotificationsBtn">Bildirimleri Aç</button>
+        <div id="notificationStatus" class="notification-status">Bildirim Durumu: Bilinmiyor</div>
+        <p style="font-size:12px; color:#ff9100; text-align:center;">Not: Bildirimler sadece site tarayıcıda açıkken gönderilecektir.</p>
+    </div>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getDatabase, ref, set, onValue, update, push, runTransaction } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
@@ -319,6 +417,63 @@
         const toggleNotificationsBtn = document.getElementById("toggleNotificationsBtn");
         const notificationStatus = document.getElementById("notificationStatus");
 
+        // --- Custom Alert Fonksiyonu ---
+        /**
+         * Shows a custom alert modal.
+         * @param {string} message The message to display in the alert.
+         * @param {'success' | 'warning' | 'error' | 'info'} type The type of alert for styling and icon.
+         * @param {number} duration The duration in milliseconds before the alert automatically hides. Default is 4000ms.
+         */
+        function showAlert(message, type = 'info', duration = 4000) {
+            // Remove any existing alerts to prevent stacking issues
+            const existingAlerts = document.querySelectorAll('.custom-alert-overlay');
+            existingAlerts.forEach(alert => alert.remove());
+
+            const overlay = document.createElement('div');
+            overlay.className = 'custom-alert-overlay';
+
+            const modal = document.createElement('div');
+            modal.className = `custom-alert-modal ${type}`;
+
+            let titleText = '';
+            if (type === 'success') {
+                titleText = 'Başarılı!';
+            } else if (type === 'warning') {
+                titleText = 'Uyarı!';
+            } else if (type === 'error') {
+                titleText = 'Hata!';
+            } else {
+                titleText = 'Bilgi';
+            }
+
+            const header = document.createElement('div');
+            header.className = `custom-alert-header ${type}`;
+            header.textContent = titleText;
+
+            const body = document.createElement('div');
+            body.className = 'custom-alert-body';
+            body.textContent = message;
+
+            modal.appendChild(header);
+            modal.appendChild(body);
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+
+            // Trigger show animation
+            requestAnimationFrame(() => {
+                overlay.classList.add('show');
+            });
+
+            // Hide and remove after duration
+            setTimeout(() => {
+                modal.classList.add('hide'); // Start hide animation
+                modal.addEventListener('animationend', () => {
+                    overlay.remove(); // Remove overlay after animation
+                }, { once: true }); // Ensure listener runs only once
+            }, duration);
+        }
+
+
         // --- Bildirim Ayarları ---
 
         // Bildirim UI'sini güncelle
@@ -344,14 +499,16 @@
         toggleNotificationsBtn.addEventListener('click', async () => {
             if (Notification.permission === 'granted') {
                 console.log("Bildirimler zaten açık.");
-                alert("Bildirimler zaten açık. Kapatmak için tarayıcı ayarlarınızı kullanın.");
+                showAlert("Bildirimler zaten açık. Kapatmak için tarayıcı ayarlarınızı kullanın.", 'info');
             } else {
                 const permission = await Notification.requestPermission();
                 updateNotificationUI();
                 if (permission === 'granted') {
                     console.log('Bildirim izni verildi.');
+                    showAlert("Bildirim izni verildi. Artık site açıkken bildirim alacaksınız.", 'success');
                 } else {
                     console.log('Bildirim izni reddedildi.');
+                    showAlert("Bildirim izni reddedildi. Bildirim alamayacaksınız.", 'warning');
                 }
             }
         });
@@ -365,12 +522,12 @@
             if (Notification.permission === 'granted') {
                 const options = {
                     body: body,
-                    icon: 'https://placehold.co/48x48/1de9b6/000?text=⚽', // Small icon
-                    badge: 'https://placehold.co/48x48/1de9b6/000?text=🏆', // Badge for mobile
-                    tag: 'tournament-update', // Tag to group notifications
-                    renotify: true // Re-notify if a new notification with the same tag arrives
+                    icon: 'https://placehold.co/48x48/1de9b6/000?text=⚽', // Küçük bir ikon
+                    badge: 'https://placehold.co/48x48/1de9b6/000?text=🏆', // Mobil için rozet
+                    tag: 'tournament-update', // Aynı türden bildirimleri birleştirmek için
+                    renotify: true // Aynı tag'e sahip yeni bir bildirim gelirse tekrar titreşim vs.
                 };
-                new Notification(title, options); // Create notification directly
+                new Notification(title, options); // Doğrudan bildirim oluştur
                 console.log('Bildirim doğrudan gönderildi.');
             } else {
                 console.log('Bildirim izni verilmediği için bildirim gösterilemedi.');
@@ -409,8 +566,9 @@
             if (pin === "1221") { // Admin password
                 adminPanel.classList.remove("hidden");
                 keypadPanel.classList.add("hidden");
+                showAlert("Admin Paneline hoş geldiniz!", 'success');
             } else {
-                alert("Hatalı şifre!");
+                showAlert("Hatalı şifre!", 'error'); // Custom alert for wrong password
             }
             pin = "";
             pinDisplay.value = "";
@@ -478,14 +636,14 @@
         addTeamBtn.addEventListener("click", async () => {
             const name = teamNameInput.value.trim();
             if (!name) {
-                alert("Takım adı boş olamaz!");
+                showAlert("Takım adı boş olamaz!", 'warning');
                 return;
             }
             const teamRef = ref(db, "teams/" + name);
             // Initialize new team with 0 stats
             await set(teamRef, { name, wins: 0, losses: 0, points: 0 });
             teamNameInput.value = "";
-            alert(`${name} takımı eklendi!`);
+            showAlert(`${name} takımı başarıyla eklendi!`, 'success');
         });
 
         // --- Yaklaşan Maç Yönetimi ---
@@ -510,16 +668,16 @@
             const date = matchDateInput.value;
             const time = matchTimeInput.value;
 
-            if (!teamA || !teamB || !date || !time) {
-                alert("Tüm alanları doldurun!");
+            if (!teamA || !teamB || !date || !time || teamA === "" || teamB === "") {
+                showAlert("Tüm alanları doldurun ve geçerli takımları seçin!", 'warning');
                 return;
             }
             if (teamA === teamB) {
-                alert("Takımlar farklı olmalı!");
+                showAlert("Takımlar farklı olmalı!", 'error');
                 return;
             }
             await set(upcomingMatchRef, { teamA, teamB, date, time });
-            alert("Yaklaşan maç güncellendi!");
+            showAlert("Yaklaşan maç başarıyla güncellendi!", 'success');
             matchDateInput.value = "";
             matchTimeInput.value = "";
 
@@ -563,15 +721,15 @@
             const matchType = matchTypeSelect.value; // Get match type
 
             if (!team1 || !team2 || team1 === "" || team2 === "") { // Empty option check
-                alert("Takımları seçin!");
+                showAlert("Takımları seçin!", 'warning');
                 return;
             }
             if (team1 === team2) {
-                alert("Takımlar farklı olmalı!");
+                showAlert("Takımlar farklı olmalı!", 'error');
                 return;
             }
             if (isNaN(score1) || isNaN(score2) || score1 < 0 || score2 < 0) {
-                alert("Geçerli skorlar girin!");
+                showAlert("Geçerli skorlar girin (0 veya üzeri olmalı)!", 'warning');
                 return;
             }
 
@@ -582,7 +740,7 @@
             // Apply points only for 'Lig' matches
             if (matchType === 'Lig') {
                 if (score1 === score2) {
-                    alert("Maç berabere bitti. Puanlama yapılmadı (Beraberlik için puan ekleyebilirsiniz).");
+                    showAlert("Maç berabere bitti. Puanlama yapılmadı.", 'info');
                 } else {
                     const winnerName = score1 > score2 ? team1 : team2;
                     const loserName = score1 > score2 ? team2 : team1;
@@ -595,7 +753,7 @@
                             currentTeam.points = (currentTeam.points || 0) + 3;
                         }
                         return currentTeam;
-                    }).catch(error => console.error("Winner team update error:", error));
+                    }).catch(error => console.error("Kazanan takım güncelleme hatası:", error));
 
                     // Update loser team stats (1 loss)
                     const loserRef = ref(db, 'teams/' + loserName);
@@ -604,16 +762,19 @@
                             currentTeam.losses = (currentTeam.losses || 0) + 1;
                         }
                         return currentTeam;
-                    }).catch(error => console.error("Loser team update error:", error));
+                    }).catch(error => console.error("Kaybeden takım güncelleme hatası:", error));
+                    showAlert("Maç skoru eklendi ve puanlar güncellendi!", 'success');
                 }
+            } else {
+                 showAlert("Hazırlık maçı skoru başarıyla eklendi!", 'success');
             }
 
-            // Clear form
+
+            // Formu temizle
             score1Input.value = "";
             score2Input.value = "";
             team1Select.value = ""; // Reset options to default
             team2Select.value = ""; // Reset options to default
-            alert("Maç skoru başarıyla eklendi!");
 
             // Send notification
             showTournamentNotification("Yeni Skor Eklendi!", `${team1} ${score1} - ${score2} ${team2} maçı sonuçlandı.`);
