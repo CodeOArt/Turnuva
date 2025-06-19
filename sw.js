@@ -45,7 +45,7 @@ self.addEventListener('notificationclick', (event) => {
     const clickedNotification = event.notification;
     clickedNotification.close();
 
-    const urlToOpen = 'https://example.com/tournament-app'; // Uygulamanızın URL'si
+    const urlToOpen = 'https://codeoart.github.io/Turnuva/'; // Uygulamanızın URL'si
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
