@@ -1,556 +1,623 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YeşilTepe Futbol Turnuvası</title>
-  <style>
-    body {
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: white;
-      font-family: 'Montserrat', sans-serif;
-      padding: 20px;
-    }
-    h1, h2, h3 {
-      text-align: center;
-      color: #1de9b6;
-    }
-    .table-container {
-      overflow-x: auto;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-      background: #1f1f1f;
-      border-radius: 16px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-      overflow: hidden;
-    }
-    th, td {
-      padding: 14px;
-      text-align: center;
-      border-bottom: 1px solid #333;
-    }
-    th {
-      background: #1de9b6;
-      color: black;
-      font-weight: bold;
-    }
-    tr:last-child td {
-      border-bottom: none;
-    }
-    tr:hover {
-      background-color: #2c3e50;
-    }
-    .admin-panel, .keypad, .match-box {
-      background: #1f1f1f;
-      padding: 20px;
-      max-width: 600px;
-      margin: 20px auto;
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    }
-    input, select, button {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      outline: none;
-      box-sizing: border-box;
-    }
-    input, select {
-      background: #333;
-      color: white;
-    }
-    button {
-      background: #1de9b6;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-      user-select: none;
-      transition: background 0.3s;
-    }
-    button:hover {
-      background: #ff9100;
-      color: black;
-    }
-    .keypad-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 10px;
-    }
-    .hidden {
-      display: none !important;
-    }
-    .match-tag {
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-weight: bold;
-      font-size: 12px;
-    }
-    .tag-league {
-      background-color: rgba(29, 233, 182, 0.2);
-      color: #1de9b6;
-      border: 1px solid #1de9b6;
-    }
-    .tag-friendly {
-      background-color: rgba(158, 158, 158, 0.2);
-      color: #9e9e9e;
-      border: 1px solid #9e9e9e;
-    }
-    /* Bildirim butonu sağ üstte */
-   #notifyBtn {
-  position: fixed;
-  top: 22;
-  right: 15px;
-  background-color: #1de9b6;
-  color: black;
-  font-weight: bold;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 25%;
-  cursor: pointer;
-  z-index: 9999;
-  font-size: 13px;
-  width: 110px;
-  height: 45px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  transition: background-color 0.3s ease;
-}
-
-#notifyBtn:hover {
-  background-color: #00b386;
-}
-
-    /* Animasyonlu popup bildirim */
-    #popupNotification {
-      position: fixed;
-      top: 20px;
-      right: -400px;
-      background: #1de9b6;
-      color: black;
-      font-weight: bold;
-      padding: 15px 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-      transition: right 0.5s ease-in-out, opacity 0.5s;
-      z-index: 9999;
-      font-family: 'Montserrat', sans-serif;
-      opacity: 0;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>YeşilTepe Futbol Turnuvası</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        h1, h2, h3 {
+            text-align: center;
+            color: #1de9b6;
+            margin-bottom: 20px;
+        }
+        .table-container {
+            overflow-x: auto; /* Küçük ekranlarda tabloyu kaydırılabilir yapar */
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #1f1f1f;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            overflow: hidden; /* Köşelerin yuvarlak kalmasını sağlar */
+        }
+        th, td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+        th {
+            background: #1de9b6;
+            color: black;
+            font-weight: bold;
+        }
+        tr:last-child td {
+            border-bottom: none; /* Son satırın alt çizgisini kaldırır */
+        }
+        tr:hover {
+            background-color: #2c3e50;
+        }
+        .admin-panel, .keypad, .match-box, .notification-settings {
+            background: #1f1f1f;
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            width: 100%; /* Make panels take full width up to max-width */
+            box-sizing: border-box;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px; /* Slightly larger padding */
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        input, select {
+            background: #333;
+            color: white;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #1de9b6;
+            box-shadow: 0 0 8px rgba(29, 233, 182, 0.5);
+        }
+        button {
+            background: #1de9b6;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background: #ff9100;
+            color: black;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .keypad-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .hidden {
+            display: none !important;
+        }
+        .match-tag {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 12px;
+            display: inline-block; /* Ensure tags don't break layout */
+        }
+        .tag-league {
+            background-color: rgba(29, 233, 182, 0.2);
+            color: #1de9b6;
+            border: 1px solid #1de9b6;
+        }
+        .tag-friendly {
+            background-color: rgba(158, 158, 158, 0.2);
+            color: #9e9e9e;
+            border: 1px solid #9e9e9e;
+        }
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        .flex-row > select, .flex-row > input {
+            flex: 1;
+        }
+        .notification-status {
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: #9e9e9e;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            h2 {
+                font-size: 20px;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 14px;
+            }
+            .admin-panel, .keypad, .match-box, .notification-settings {
+                padding: 15px;
+                margin: 15px auto;
+            }
+            input, select, button {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-  <button id="notifyBtn">🔔 Bildirimleri Aç</button>
+    <h1>YeşilTepe Futbol Turnuvası</h1>
 
-  <div id="popupNotification">
-    <span id="popupTitle">Başlık</span><br>
-    <span id="popupBody" style="font-weight: normal;">Mesaj içeriği</span>
-  </div>
+    
 
-  <h1>YeşilTepe Futbol Turnuvası</h1>
-
-  <h2>Takım Sıralaması</h2>
-  <div class="table-container">
-    <table id="rankingTable">
-      <thead>
-        <tr>
-          <th>Sıralama</th>
-          <th>Takım Adı</th>
-          <th>Galibiyet</th>
-          <th>Mağlubiyet</th>
-          <th>Puan</th>
-        </tr>
-      </thead>
-      <tbody id="rankingBody"></tbody>
-    </table>
-  </div>
-
-  <h2>Yaklaşan Maç</h2>
-  <div class="match-box" id="upcomingMatchBox">
-    <div style="font-size:18px; color:#ff9100; text-align:center;" id="upcomingMatchText">Henüz belirlenmedi</div>
-    <div style="font-size:14px; color:#ff9100; text-align:center;" id="upcomingMatchTime">Tarih: - | Saat: -</div>
-  </div>
-
-  <h2>Geçmiş Maçlar</h2>
-  <div class="match-box">
-    <table id="pastMatchesTable">
-      <thead>
-        <tr><th>Takım 1</th><th>Skor</th><th>Takım 2</th><th>Tür</th></tr>
-      </thead>
-      <tbody id="pastMatches"></tbody>
-    </table>
-  </div>
-
-  <button id="openAdminBtn" style="display:block; margin:20px auto; max-width:600px; background:#ff9100; color:#000; font-weight:bold; border:none; border-radius:8px; padding:12px; cursor:pointer;">
-    Admin Panelini Aç / Kapat
-  </button>
-
-  <div class="keypad hidden" id="keypadPanel">
-    <h3>Admin Panel Girişi</h3>
-    <input type="password" id="pinDisplay" placeholder="Şifre" readonly />
-    <div class="keypad-buttons" id="keypadButtons">
-      <button type="button" data-key="1">1</button>
-      <button type="button" data-key="2">2</button>
-      <button type="button" data-key="3">3</button>
-      <button type="button" data-key="4">4</button>
-      <button type="button" data-key="5">5</button>
-      <button type="button" data-key="6">6</button>
-      <button type="button" data-key="7">7</button>
-      <button type="button" data-key="8">8</button>
-      <button type="button" data-key="9">9</button>
-      <button type="button" id="clearPinBtn">Temizle</button>
-      <button type="button" data-key="0">0</button>
-      <button type="button" id="enterPinBtn">Giriş</button>
+    <h2>Takım Sıralaması</h2>
+    <div class="table-container">
+        <table id="rankingTable">
+            <thead>
+                <tr>
+                    <th>Sıralama</th>
+                    <th>Takım Adı</th>
+                    <th>Galibiyet</th>
+                    <th>Mağlubiyet</th>
+                    <th>Puan</th>
+                </tr>
+            </thead>
+            <tbody id="rankingBody"></tbody>
+        </table>
     </div>
-  </div>
 
-  <div class="admin-panel hidden" id="adminPanel">
-
-    <h3>Takım Ekle</h3>
-    <input type="text" id="teamName" placeholder="Takım Adı" />
-    <button id="addTeamBtn">Takımı Ekle</button>
-
-    <h3>Yeni Maç Belirle</h3>
-    <div style="display:flex; gap:10px; margin-bottom:10px;">
-      <select id="teamA" style="flex:1"></select> vs <select id="teamB" style="flex:1"></select>
+    <h2>Yaklaşan Maç</h2>
+    <div class="match-box" id="upcomingMatchBox">
+        <div style="font-size:18px; color:#ff9100; text-align:center;" id="upcomingMatchText">Henüz belirlenmedi</div>
+        <div style="font-size:14px; color:#ff9100; text-align:center;" id="upcomingMatchTime">Tarih: - | Saat: -</div>
     </div>
-    <input type="date" id="matchDate" />
-    <input type="time" id="matchTimeInput" />
-    <button id="setUpcomingMatchBtn">Maçı Belirle</button>
 
-    <h3>Skor Ekle</h3>
-    <select id="matchTypeSelect">
-      <option value="Lig">Lig Maçı (Puanlı)</option>
-      <option value="Hazırlık">Hazırlık Maçı (Puansız)</option>
-    </select>
-    <div style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
-      <select id="team1" style="flex:1"></select>
-      <input type="number" id="score1" placeholder="Skor" min="0" style="flex:0.5;" />
-      <span>-</span>
-      <input type="number" id="score2" placeholder="Skor" min="0" style="flex:0.5;" />
-      <select id="team2" style="flex:1"></select>
+    <h2>Geçmiş Maçlar</h2>
+    <div class="match-box">
+        <table id="pastMatchesTable">
+            <thead>
+                <tr><th>Takım 1</th><th>Skor</th><th>Takım 2</th><th>Tür</th></tr>
+            </thead>
+            <tbody id="pastMatches"></tbody>
+        </table>
     </div>
-    <button id="addPastMatchBtn">Skoru Ekle</button>
 
-  </div>
+    <button id="openAdminBtn" style="display:block; margin:20px auto; max-width:600px; background:#ff9100; color:#000; font-weight:bold; border:none; border-radius:8px; padding:12px; cursor:pointer;">
+        Admin Panelini Aç / Kapat
+    </button>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-    import { getDatabase, ref, set, onValue, push, runTransaction } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+    <div class="keypad hidden" id="keypadPanel">
+        <h3>Admin Panel Girişi</h3>
+        <input type="password" id="pinDisplay" placeholder="Şifre" readonly />
+        <div class="keypad-buttons" id="keypadButtons">
+            <button type="button" data-key="1">1</button>
+            <button type="button" data-key="2">2</button>
+            <button type="button" data-key="3">3</button>
+            <button type="button" data-key="4">4</button>
+            <button type="button" data-key="5">5</button>
+            <button type="button" data-key="6">6</button>
+            <button type="button" data-key="7">7</button>
+            <button type="button" data-key="8">8</button>
+            <button type="button" data-key="9">9</button>
+            <button type="button" id="clearPinBtn">Temizle</button>
+            <button type="button" data-key="0">0</button>
+            <button type="button" id="enterPinBtn">Giriş</button>
+        </div>
+        
+    </div>
 
-    // Firebase yapılandırma
-    const firebaseConfig = {
-      apiKey: "AIzaSyC_4leEyiGLUg4pF420WtQOC2om-OyWoEU",
-      authDomain: "futbol-1e4a5.firebaseapp.com",
-      databaseURL: "https://futbol-1e4a5-default-rtdb.firebaseio.com",
-      projectId: "futbol-1e4a5",
-      storageBucket: "futbol-1e4a5.appspot.com",
-      messagingSenderId: "915149469219",
-      appId: "1:915149469219:web:dbc7fd59a2aa8708536396",
-      measurementId: "G-ZF51DF32W7"
-    };
+        <div class="notification-settings">
+        <h3>Bildirim Ayarları</h3>
+        <button id="toggleNotificationsBtn">Bildirimleri Aç</button>
+        <div id="notificationStatus" class="notification-status">Bildirim Durumu: Bilinmiyor</div>
+        <p style="font-size:12px; color:#ff9100; text-align:center;">Not: Bildirimler sadece site tarayıcıda açıkken gönderilecektir.</p>
+    </div>
+    <div class="admin-panel hidden" id="adminPanel">
+        <h3>Takım Ekle</h3>
+        <input type="text" id="teamName" placeholder="Takım Adı" />
+        <button id="addTeamBtn">Takımı Ekle</button>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+        <h3>Yeni Maç Belirle</h3>
+        <div class="flex-row">
+            <select id="teamA"></select>
+            <span>vs</span>
+            <select id="teamB"></select>
+        </div>
+        <input type="date" id="matchDate" />
+        <input type="time" id="matchTimeInput" />
+        <button id="setUpcomingMatchBtn">Maçı Belirle</button>
 
-    // DOM referansları
-    const rankingBody = document.getElementById("rankingBody");
-    const upcomingMatchText = document.getElementById("upcomingMatchText");
-    const upcomingMatchTime = document.getElementById("upcomingMatchTime");
-    const pastMatchesBody = document.getElementById("pastMatches");
+        <h3>Skor Ekle</h3>
+        <select id="matchTypeSelect">
+            <option value="Lig">Lig Maçı (Puanlı)</option>
+            <option value="Hazırlık">Hazırlık Maçı (Puansız)</option>
+        </select>
+        <div class="flex-row">
+            <select id="team1"></select>
+            <input type="number" id="score1" placeholder="Skor" min="0"/>
+            <span>-</span>
+            <input type="number" id="score2" placeholder="Skor" min="0"/>
+            <select id="team2"></select>
+        </div>
+        <button id="addPastMatchBtn">Skoru Ekle</button>
+    </div>
 
-    const keypadPanel = document.getElementById("keypadPanel");
-    const adminPanel = document.getElementById("adminPanel");
-    const openAdminBtn = document.getElementById("openAdminBtn");
-    const pinDisplay = document.getElementById("pinDisplay");
-    const clearPinBtn = document.getElementById("clearPinBtn");
-    const enterPinBtn = document.getElementById("enterPinBtn");
-    const keypadButtons = document.querySelectorAll("#keypadButtons button[data-key]");
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue, update, push, runTransaction } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
 
-    const teamNameInput = document.getElementById("teamName");
-    const addTeamBtn = document.getElementById("addTeamBtn");
+        // Firebase yapılandırma - KENDİ BİLGİLERİNİZLE DEĞİŞTİRİN
+        const firebaseConfig = {
+            apiKey: "AIzaSyC_4leEyiGLUg4pF420WtQOC2om-OyWoEU",
+            authDomain: "futbol-1e4a5.firebaseapp.com",
+            databaseURL: "https://futbol-1e4a5-default-rtdb.firebaseio.com",
+            projectId: "futbol-1e4a5",
+            storageBucket: "futbol-1e4a5.appspot.com",
+            messagingSenderId: "915149469219",
+            appId: "1:915149469219:web:dbc7fd59a2aa8708536396",
+            measurementId: "G-ZF51DF32W7"
+        };
 
-    const teamASelect = document.getElementById("teamA");
-    const teamBSelect = document.getElementById("teamB");
-    const matchDateInput = document.getElementById("matchDate");
-    const matchTimeInput = document.getElementById("matchTimeInput");
-    const setUpcomingMatchBtn = document.getElementById("setUpcomingMatchBtn");
+        // Firebase başlat
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
 
-    const team1Select = document.getElementById("team1");
-    const team2Select = document.getElementById("team2");
-    const score1Input = document.getElementById("score1");
-    const score2Input = document.getElementById("score2");
-    const matchTypeSelect = document.getElementById("matchTypeSelect");
-    const addPastMatchBtn = document.getElementById("addPastMatchBtn");
+        // DOM referansları
+        const rankingBody = document.getElementById("rankingBody");
+        const upcomingMatchText = document.getElementById("upcomingMatchText");
+        const upcomingMatchTime = document.getElementById("upcomingMatchTime");
+        const pastMatchesBody = document.getElementById("pastMatches");
 
-    // Bildirim butonu
-    const notifyBtn = document.getElementById("notifyBtn");
-    const popup = document.getElementById("popupNotification");
-    const popupTitle = document.getElementById("popupTitle");
-    const popupBody = document.getElementById("popupBody");
+        const keypadPanel = document.getElementById("keypadPanel");
+        const adminPanel = document.getElementById("adminPanel");
+        const openAdminBtn = document.getElementById("openAdminBtn");
+        const pinDisplay = document.getElementById("pinDisplay");
+        const clearPinBtn = document.getElementById("clearPinBtn");
+        const enterPinBtn = document.getElementById("enterPinBtn");
+        const keypadButtons = document.querySelectorAll("#keypadButtons button[data-key]");
 
-    // Admin panel açma/kapama & şifre yönetimi
-    let pin = "";
-    openAdminBtn.addEventListener("click", () => {
-      if (!adminPanel.classList.contains("hidden")) {
-        adminPanel.classList.add("hidden");
-        keypadPanel.classList.add("hidden");
-      } else {
-        keypadPanel.classList.remove("hidden");
-      }
-      pin = "";
-      pinDisplay.value = "";
-    });
+        // Admin Panel Form elemanları
+        const teamNameInput = document.getElementById("teamName");
+        const addTeamBtn = document.getElementById("addTeamBtn");
 
-    keypadButtons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (pin.length < 4) {
-          pin += btn.dataset.key;
-          pinDisplay.value = "*".repeat(pin.length);
-        }
-      });
-    });
+        const teamASelect = document.getElementById("teamA");
+        const teamBSelect = document.getElementById("teamB");
+        const matchDateInput = document.getElementById("matchDate");
+        const matchTimeInput = document.getElementById("matchTimeInput");
+        const setUpcomingMatchBtn = document.getElementById("setUpcomingMatchBtn");
 
-    clearPinBtn.addEventListener("click", () => {
-      pin = "";
-      pinDisplay.value = "";
-    });
+        const team1Select = document.getElementById("team1");
+        const team2Select = document.getElementById("team2");
+        const score1Input = document.getElementById("score1");
+        const score2Input = document.getElementById("score2");
+        const matchTypeSelect = document.getElementById("matchTypeSelect");
+        const addPastMatchBtn = document.getElementById("addPastMatchBtn");
 
-    enterPinBtn.addEventListener("click", () => {
-      if (pin === "1221") {
-        adminPanel.classList.remove("hidden");
-        keypadPanel.classList.add("hidden");
-      } else {
-        alert("Hatalı şifre!");
-      }
-      pin = "";
-      pinDisplay.value = "";
-    });
+        // Bildirim Elemanları
+        const toggleNotificationsBtn = document.getElementById("toggleNotificationsBtn");
+        const notificationStatus = document.getElementById("notificationStatus");
 
-    // Takımları Firebase'den çek ve tablo olarak göster
-    function renderTeams(snapshot) {
-      rankingBody.innerHTML = "";
-      const teams = [];
-      snapshot.forEach(childSnap => {
-        teams.push(childSnap.val());
-      });
+        // --- Bildirim Ayarları ---
 
-      teams.sort((a,b) => (b.points || 0) - (a.points || 0));
-
-      teams.forEach((team, i) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${i+1}</td>
-          <td>${team.name}</td>
-          <td>${team.wins || 0}</td>
-          <td>${team.losses || 0}</td>
-          <td>${team.points || 0}</td>
-        `;
-        rankingBody.appendChild(tr);
-      });
-
-      updateDropdowns(teams);
-    }
-
-    // Dropdownları güncelle
-    function updateDropdowns(teams) {
-      [teamASelect, teamBSelect, team1Select, team2Select].forEach(sel => {
-        const currentVal = sel.value;
-        sel.innerHTML = "";
-        teams.forEach(team => {
-          const opt = document.createElement("option");
-          opt.value = team.name;
-          opt.textContent = team.name;
-          sel.appendChild(opt);
-        });
-        sel.value = currentVal;
-      });
-    }
-
-    const teamsRef = ref(db, "teams");
-    onValue(teamsRef, renderTeams);
-
-    // Takım ekleme
-    addTeamBtn.addEventListener("click", async () => {
-      const name = teamNameInput.value.trim();
-      if (!name) return alert("Takım adı boş olamaz!");
-      const teamRef = ref(db, "teams/" + name);
-      await set(teamRef, { name, wins: 0, losses: 0, points: 0 });
-      teamNameInput.value = "";
-      alert(`${name} takımı eklendi!`);
-    });
-
-    // Yaklaşan maçı göster
-    function renderUpcomingMatch(snapshot) {
-      const data = snapshot.val();
-      if (!data || !data.teamA) {
-        upcomingMatchText.textContent = "Henüz belirlenmedi";
-        upcomingMatchTime.textContent = "Tarih: - | Saat: -";
-        return;
-      }
-      upcomingMatchText.textContent = `${data.teamA} vs ${data.teamB}`;
-      upcomingMatchTime.textContent = `Tarih: ${data.date} | Saat: ${data.time}`;
-    }
-
-    const upcomingMatchRef = ref(db, "upcomingMatch");
-    onValue(upcomingMatchRef, renderUpcomingMatch);
-
-    // Yeni maç belirleme
-    setUpcomingMatchBtn.addEventListener("click", async () => {
-      const teamA = teamASelect.value;
-      const teamB = teamBSelect.value;
-      const date = matchDateInput.value;
-      const time = matchTimeInput.value;
-      if (!teamA || !teamB || !date || !time) return alert("Tüm alanları doldurun");
-      if (teamA === teamB) return alert("Takımlar farklı olmalı!");
-      await set(upcomingMatchRef, { teamA, teamB, date, time });
-      alert("Yaklaşan maç güncellendi");
-
-      // Bildirim gönder
-      notifyAll("Turnuva Duyuru", `${teamA} vs ${teamB} maçı eklendi!`);
-
-      matchDateInput.value = "";
-      matchTimeInput.value = "";
-    });
-
-    // Geçmiş maçları listele
-    const pastMatchesRef = ref(db, "pastMatches");
-    onValue(pastMatchesRef, snapshot => {
-      pastMatchesBody.innerHTML = "";
-      const matches = [];
-      snapshot.forEach(childSnap => {
-        matches.push(childSnap.val());
-      });
-
-      matches.reverse();
-
-      matches.forEach(m => {
-        let tagHtml = '';
-        if (m.type === 'Lig') {
-          tagHtml = `<span class="match-tag tag-league">LİG Maçı</span>`;
-        } else if (m.type === 'Hazırlık') {
-          tagHtml = `<span class="match-tag tag-friendly">Hazırlık Maçı</span>`;
+        // Bildirim UI'sini güncelle
+        function updateNotificationUI() {
+            if (Notification.permission === 'granted') {
+                toggleNotificationsBtn.textContent = "Bildirimleri Kapat"; // Visual only, cannot programmatically revoke
+                notificationStatus.textContent = "Bildirim Durumu: Açık";
+                notificationStatus.style.color = '#1de9b6';
+            } else if (Notification.permission === 'denied') {
+                toggleNotificationsBtn.textContent = "Bildirimleri Aç (Engellendi)";
+                notificationStatus.textContent = "Bildirim Durumu: Engellendi (Tarayıcı ayarlarından izin verin)";
+                notificationStatus.style.color = '#ff4d4d';
+                toggleNotificationsBtn.disabled = true; // Disable button if permission is denied
+            } else {
+                toggleNotificationsBtn.textContent = "Bildirimleri Aç";
+                notificationStatus.textContent = "Bildirim Durumu: Bilinmiyor";
+                notificationStatus.style.color = '#9e9e9e';
+                toggleNotificationsBtn.disabled = false;
+            }
         }
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${m.team1}</td><td>${m.score1} - ${m.score2}</td><td>${m.team2}</td><td>${tagHtml}</td>`;
-        pastMatchesBody.appendChild(tr);
-      });
-    });
-
-    // Skor ekleme
-    addPastMatchBtn.addEventListener("click", async () => {
-      const team1 = team1Select.value;
-      const team2 = team2Select.value;
-      const score1 = parseInt(score1Input.value);
-      const score2 = parseInt(score2Input.value);
-      const type = matchTypeSelect.value;
-
-      if (!team1 || !team2) return alert("Takımları seçin");
-      if (team1 === team2) return alert("Takımlar farklı olmalı");
-      if (isNaN(score1) || isNaN(score2)) return alert("Geçerli skor girin");
-
-      const newMatchRef = push(pastMatchesRef);
-      await set(newMatchRef, { team1, team2, score1, score2, type });
-
-      // Puan güncellemesi sadece Lig maçlarında
-      if (type === "Lig") {
-        // Takım1 puan ve galibiyet/malubiyet
-        const team1Ref = ref(db, "teams/" + team1);
-        runTransaction(team1Ref, team => {
-          if (team) {
-            if (score1 > score2) {
-              team.wins = (team.wins || 0) + 1;
-              team.points = (team.points || 0) + 3;
+        // Bildirim izni iste
+        toggleNotificationsBtn.addEventListener('click', async () => {
+            if (Notification.permission === 'granted') {
+                console.log("Bildirimler zaten açık.");
+                alert("Bildirimler zaten açık. Kapatmak için tarayıcı ayarlarınızı kullanın.");
             } else {
-              team.losses = (team.losses || 0) + 1;
+                const permission = await Notification.requestPermission();
+                updateNotificationUI();
+                if (permission === 'granted') {
+                    console.log('Bildirim izni verildi.');
+                } else {
+                    console.log('Bildirim izni reddedildi.');
+                }
             }
-          }
-          return team;
         });
 
-        // Takım2 puan ve galibiyet/malubiyet
-        const team2Ref = ref(db, "teams/" + team2);
-        runTransaction(team2Ref, team => {
-          if (team) {
-            if (score2 > score1) {
-              team.wins = (team.wins || 0) + 1;
-              team.points = (team.points || 0) + 3;
+        // Sayfa yüklendiğinde bildirim durumunu kontrol et
+        window.addEventListener('DOMContentLoaded', updateNotificationUI);
+
+
+        // Yerel bildirim göster (Service Worker olmadan - sadece tarayıcı açıkken çalışır)
+        async function showTournamentNotification(title, body) {
+            if (Notification.permission === 'granted') {
+                const options = {
+                    body: body,
+                    icon: 'https://placehold.co/48x48/1de9b6/000?text=⚽', // Small icon
+                    badge: 'https://placehold.co/48x48/1de9b6/000?text=🏆', // Badge for mobile
+                    tag: 'tournament-update', // Tag to group notifications
+                    renotify: true // Re-notify if a new notification with the same tag arrives
+                };
+                new Notification(title, options); // Create notification directly
+                console.log('Bildirim doğrudan gönderildi.');
             } else {
-              team.losses = (team.losses || 0) + 1;
+                console.log('Bildirim izni verilmediği için bildirim gösterilemedi.');
             }
-          }
-          return team;
+        }
+
+
+        // --- Admin Panel Açma/Kapama & Şifre Yönetimi ---
+        let pin = "";
+        openAdminBtn.addEventListener("click", () => {
+            if (!adminPanel.classList.contains("hidden")) {
+                adminPanel.classList.add("hidden");
+                keypadPanel.classList.add("hidden");
+            } else {
+                keypadPanel.classList.remove("hidden");
+            }
+            pin = "";
+            pinDisplay.value = "";
         });
-      }
 
-      alert("Skor başarıyla eklendi!");
-
-      // Bildirim gönder
-      notifyAll("Turnuva Duyuru", `${team1} ${score1} - ${score2} ${team2} skoru eklendi!`);
-
-      // Alanları temizle
-      score1Input.value = "";
-      score2Input.value = "";
-    });
-
-    // Bildirim izni isteme ve bildirim gönderme
-    function sendNotification(title, body) {
-      if (!("Notification" in window)) return console.log("Tarayıcı bildirim desteklemiyor.");
-      if (Notification.permission === "granted") {
-        new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/5968/5968885.png" });
-      } else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            new Notification(title, { body, icon: "https://cdn-icons-png.flaticon.com/512/5968/5968885.png" });
-          }
+        keypadButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                if (pin.length < 4) {
+                    pin += btn.dataset.key;
+                    pinDisplay.value = "*".repeat(pin.length);
+                }
+            });
         });
-      }
-    }
 
-    // Animasyonlu popup bildirim gösterme
-    function showAnimatedNotification(title, message) {
-      popupTitle.textContent = title;
-      popupBody.textContent = message;
-      popup.style.right = "20px";
-      popup.style.opacity = "1";
-
-      setTimeout(() => {
-        popup.style.right = "-400px";
-        popup.style.opacity = "0";
-      }, 4000);
-    }
-
-    // Bildirim ve animasyonu birlikte çalıştıran fonksiyon
-    function notifyAll(title, message) {
-      sendNotification(title, message);
-      showAnimatedNotification(title, message);
-    }
-
-    // Bildirim butonu tıklama olayı
-    notifyBtn.addEventListener("click", () => {
-      if (Notification.permission === "granted") {
-        alert("Bildirim izni zaten verilmiş.");
-      } else {
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            alert("Bildirim izni verildi.");
-          } else {
-            alert("Bildirim izni reddedildi.");
-          }
+        clearPinBtn.addEventListener("click", () => {
+            pin = "";
+            pinDisplay.value = "";
         });
-      }
-    });
 
-  </script>
+        enterPinBtn.addEventListener("click", () => {
+            if (pin === "1221") { // Admin password
+                adminPanel.classList.remove("hidden");
+                keypadPanel.classList.add("hidden");
+            } else {
+                alert("Hatalı şifre!");
+            }
+            pin = "";
+            pinDisplay.value = "";
+        });
+
+        // --- Takım Yönetimi ---
+        // Takımları Firebase'den çek ve tablo olarak göster
+        function renderTeams(snapshot) {
+            rankingBody.innerHTML = "";
+            const teams = [];
+            snapshot.forEach(childSnap => {
+                teams.push(childSnap.val());
+            });
+            // Takımları puana göre sırala (büyükten küçüğe)
+            teams.sort((a, b) => (b.points || 0) - (a.points || 0));
+
+            teams.forEach((team, i) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${i + 1}</td>
+                    <td>${team.name}</td>
+                    <td>${team.wins || 0}</td>
+                    <td>${team.losses || 0}</td>
+                    <td>${team.points || 0}</td>
+                `;
+                rankingBody.appendChild(tr);
+            });
+            // Dropdown'ları güncelle
+            updateDropdowns(teams);
+        }
+
+        // Dropdownları güncelle (takımlar)
+        function updateDropdowns(teams) {
+            [teamASelect, teamBSelect, team1Select, team2Select].forEach(sel => {
+                const currentVal = sel.value; // Preserve selected value
+                sel.innerHTML = "";
+                // Add empty option
+                const defaultOpt = document.createElement("option");
+                defaultOpt.value = "";
+                defaultOpt.textContent = "Takım Seçin";
+                defaultOpt.disabled = true;
+                defaultOpt.selected = true;
+                sel.appendChild(defaultOpt);
+
+                teams.forEach(team => {
+                    const opt = document.createElement("option");
+                    opt.value = team.name;
+                    opt.textContent = team.name;
+                    sel.appendChild(opt);
+                });
+                // If previous value is still in the list, re-select it
+                if (Array.from(sel.options).some(opt => opt.value === currentVal)) {
+                    sel.value = currentVal;
+                } else {
+                    sel.value = ""; // Reset to default if not found
+                }
+            });
+        }
+
+        // Firebase "teams" referansı dinleyicisi
+        const teamsRef = ref(db, "teams");
+        onValue(teamsRef, renderTeams);
+
+        // Takım ekleme
+        addTeamBtn.addEventListener("click", async () => {
+            const name = teamNameInput.value.trim();
+            if (!name) {
+                alert("Takım adı boş olamaz!");
+                return;
+            }
+            const teamRef = ref(db, "teams/" + name);
+            // Initialize new team with 0 stats
+            await set(teamRef, { name, wins: 0, losses: 0, points: 0 });
+            teamNameInput.value = "";
+            alert(`${name} takımı eklendi!`);
+        });
+
+        // --- Yaklaşan Maç Yönetimi ---
+        // Yaklaşan maçı göster
+        function renderUpcomingMatch(snapshot) {
+            const data = snapshot.val();
+            if (!data || !data.teamA) {
+                upcomingMatchText.textContent = "Henüz belirlenmedi";
+                upcomingMatchTime.textContent = "Tarih: - | Saat: -";
+                return;
+            }
+            upcomingMatchText.textContent = `${data.teamA} vs ${data.teamB}`;
+            upcomingMatchTime.textContent = `Tarih: ${data.date} | Saat: ${data.time}`;
+        }
+        const upcomingMatchRef = ref(db, "upcomingMatch");
+        onValue(upcomingMatchRef, renderUpcomingMatch);
+
+        // Yeni maç belirleme
+        setUpcomingMatchBtn.addEventListener("click", async () => {
+            const teamA = teamASelect.value;
+            const teamB = teamBSelect.value;
+            const date = matchDateInput.value;
+            const time = matchTimeInput.value;
+
+            if (!teamA || !teamB || !date || !time) {
+                alert("Tüm alanları doldurun!");
+                return;
+            }
+            if (teamA === teamB) {
+                alert("Takımlar farklı olmalı!");
+                return;
+            }
+            await set(upcomingMatchRef, { teamA, teamB, date, time });
+            alert("Yaklaşan maç güncellendi!");
+            matchDateInput.value = "";
+            matchTimeInput.value = "";
+
+            // Send notification
+            showTournamentNotification("Yaklaşan Maç Belirlendi!", `${teamA} vs ${teamB} maçı ${date} tarihinde, ${time} saatinde oynanacak.`);
+        });
+
+        // --- Geçmiş Maçlar ve Skor Yönetimi ---
+        // Geçmiş maçları listele (en yeni en üstte)
+        const pastMatchesRef = ref(db, "pastMatches");
+        onValue(pastMatchesRef, snapshot => {
+            pastMatchesBody.innerHTML = "";
+            const matches = [];
+            snapshot.forEach(childSnap => {
+                matches.push(childSnap.val());
+            });
+
+            // Reverse matches to show newest on top
+            matches.reverse();
+
+            matches.forEach(m => {
+                let tagHtml = '';
+                if (m.type === 'Lig') {
+                    tagHtml = `<span class="match-tag tag-league">LİG Maçı</span>`;
+                } else if (m.type === 'Hazırlık') {
+                    tagHtml = `<span class="match-tag tag-friendly">Hazırlık Maçı</span>`;
+                }
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `<td>${m.team1}</td><td>${m.score1} - ${m.score2}</td><td>${m.team2}</td><td>${tagHtml}</td>`;
+                pastMatchesBody.appendChild(tr);
+            });
+        });
+
+        // Skor ekleme (Puanlama maç türüne göre)
+        addPastMatchBtn.addEventListener("click", async () => {
+            const team1 = team1Select.value;
+            const team2 = team2Select.value;
+            const score1 = parseInt(score1Input.value);
+            const score2 = parseInt(score2Input.value);
+            const matchType = matchTypeSelect.value; // Get match type
+
+            if (!team1 || !team2 || team1 === "" || team2 === "") { // Empty option check
+                alert("Takımları seçin!");
+                return;
+            }
+            if (team1 === team2) {
+                alert("Takımlar farklı olmalı!");
+                return;
+            }
+            if (isNaN(score1) || isNaN(score2) || score1 < 0 || score2 < 0) {
+                alert("Geçerli skorlar girin!");
+                return;
+            }
+
+            // Save score and match type
+            const newMatchRef = push(pastMatchesRef);
+            await set(newMatchRef, { team1, team2, score1, score2, type: matchType });
+
+            // Apply points only for 'Lig' matches
+            if (matchType === 'Lig') {
+                if (score1 === score2) {
+                    alert("Maç berabere bitti. Puanlama yapılmadı (Beraberlik için puan ekleyebilirsiniz).");
+                } else {
+                    const winnerName = score1 > score2 ? team1 : team2;
+                    const loserName = score1 > score2 ? team2 : team1;
+
+                    // Update winner team stats (3 points, 1 win)
+                    const winnerRef = ref(db, 'teams/' + winnerName);
+                    runTransaction(winnerRef, (currentTeam) => {
+                        if (currentTeam) {
+                            currentTeam.wins = (currentTeam.wins || 0) + 1;
+                            currentTeam.points = (currentTeam.points || 0) + 3;
+                        }
+                        return currentTeam;
+                    }).catch(error => console.error("Winner team update error:", error));
+
+                    // Update loser team stats (1 loss)
+                    const loserRef = ref(db, 'teams/' + loserName);
+                    runTransaction(loserRef, (currentTeam) => {
+                        if (currentTeam) {
+                            currentTeam.losses = (currentTeam.losses || 0) + 1;
+                        }
+                        return currentTeam;
+                    }).catch(error => console.error("Loser team update error:", error));
+                }
+            }
+
+            // Clear form
+            score1Input.value = "";
+            score2Input.value = "";
+            team1Select.value = ""; // Reset options to default
+            team2Select.value = ""; // Reset options to default
+            alert("Maç skoru başarıyla eklendi!");
+
+            // Send notification
+            showTournamentNotification("Yeni Skor Eklendi!", `${team1} ${score1} - ${score2} ${team2} maçı sonuçlandı.`);
+        });
+    </script>
 </body>
 </html>
