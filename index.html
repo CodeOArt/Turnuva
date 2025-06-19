@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YeşilTepe Futbol Turnuvası</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      padding: 20px;
+    }
+    h1, h2, h3 {
+      text-align: center;
+      color: #1de9b6;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .card {
+      background: #1f1f1f;
+      padding: 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    }
+    .admin-panel, .keypad, .match-box {
+      background: #1f1f1f;
+      padding: 20px;
+      max-width: 600px;
+      margin: 20px auto;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+    }
+    input, select {
+      background: #333;
+      color: white;
+    }
+    button {
+      background: #1de9b6;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #ff9100;
+      color: black;
+    }
+    .keypad-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .hidden {
+      display: none !important;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+    th {
+      background: #1de9b6;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>YeşilTepe Futbol Turnuvası</h1>
+
+  <h2>Takım Sıralaması</h2>
+  <div class="grid" id="ranking"></div>
+
+  <h2>Yaklaşan Maç</h2>
+  <div class="match-box" id="upcomingMatchBox">
+    <div style="font-size:18px; color:#ff9100; text-align:center;" id="upcomingMatchText">Henüz belirlenmedi</div>
+    <div style="font-size:14px; color:#ff9100; text-align:center;" id="upcomingMatchTime">Tarih: - | Saat: -</div>
+  </div>
+
+  <h2>Geçmiş Maçlar</h2>
+  <div class="match-box">
+    <table>
+      <thead>
+        <tr><th>Skor</th><th>Takım 1</th><th>Takım 2</th></tr>
+      </thead>
+      <tbody id="pastMatches"></tbody>
+    </table>
+  </div>
+
+  <button id="openAdminBtn" style="display:block; margin:20px auto; max-width:600px; background:#ff9100; color:#000; font-weight:bold; border:none; border-radius:8px; padding:12px; cursor:pointer;">
+    Admin Panelini Aç / Kapat
+  </button>
+
+  <!-- Admin şifreli giriş keypad -->
+  <div class="keypad hidden" id="keypadPanel">
+    <h3>Admin Panel Girişi</h3>
+    <input type="password" id="pinDisplay" placeholder="Şifre" readonly />
+    <div class="keypad-buttons" id="keypadButtons">
+      <button type="button" data-key="1">1</button>
+      <button type="button" data-key="2">2</button>
+      <button type="button" data-key="3">3</button>
+      <button type="button" data-key="4">4</button>
+      <button type="button" data-key="5">5</button>
+      <button type="button" data-key="6">6</button>
+      <button type="button" data-key="7">7</button>
+      <button type="button" data-key="8">8</button>
+      <button type="button" data-key="9">9</button>
+      <button type="button" id="clearPinBtn">Temizle</button>
+      <button type="button" data-key="0">0</button>
+      <button type="button" id="enterPinBtn">Giriş</button>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div class="admin-panel hidden" id="adminPanel">
+
+    <h3>Takım Ekle</h3>
+    <input type="text" id="teamName" placeholder="Takım Adı" />
+    <button id="addTeamBtn">Takımı Ekle</button>
+
+    <h3>Yeni Maç Belirle</h3>
+    <div style="display:flex; gap:10px; margin-bottom:10px;">
+      <select id="teamA" style="flex:1"></select> vs <select id="teamB" style="flex:1"></select>
+    </div>
+    <input type="date" id="matchDate" />
+    <input type="time" id="matchTimeInput" />
+    <button id="setUpcomingMatchBtn">Maçı Belirle</button>
+
+    <h3>Skor Ekle</h3>
+    <div style="display:flex; gap:10px; margin-bottom:10px;">
+      <select id="team1" style="flex:1"></select>
+      <input type="number" id="score1" placeholder="Skor" min="0" />
+      <select id="team2" style="flex:1"></select>
+      <input type="number" id="score2" placeholder="Skor" min="0" />
+    </div>
+    <button id="addPastMatchBtn">Skoru Ekle</button>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getDatabase, ref, set, onValue, update, push } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+
+    // Firebase yapılandırma - kendi bilgilerinle değiştir
+    const firebaseConfig = {
+      apiKey: "AIzaSyC_4leEyiGLUg4pF420WtQOC2om-OyWoEU",
+      authDomain: "futbol-1e4a5.firebaseapp.com",
+      databaseURL: "https://futbol-1e4a5-default-rtdb.firebaseio.com",
+      projectId: "futbol-1e4a5",
+      storageBucket: "futbol-1e4a5.appspot.com",
+      messagingSenderId: "915149469219",
+      appId: "1:915149469219:web:dbc7fd59a2aa8708536396",
+      measurementId: "G-ZF51DF32W7"
+    };
+
+    // Firebase başlat
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // DOM referansları
+    const rankingDiv = document.getElementById("ranking");
+    const upcomingMatchText = document.getElementById("upcomingMatchText");
+    const upcomingMatchTime = document.getElementById("upcomingMatchTime");
+    const pastMatchesBody = document.getElementById("pastMatches");
+
+    const keypadPanel = document.getElementById("keypadPanel");
+    const adminPanel = document.getElementById("adminPanel");
+    const openAdminBtn = document.getElementById("openAdminBtn");
+    const pinDisplay = document.getElementById("pinDisplay");
+    const clearPinBtn = document.getElementById("clearPinBtn");
+    const enterPinBtn = document.getElementById("enterPinBtn");
+    const keypadButtons = document.querySelectorAll("#keypadButtons button[data-key]");
+
+    // Admin Panel Form elemanları
+    const teamNameInput = document.getElementById("teamName");
+    const addTeamBtn = document.getElementById("addTeamBtn");
+
+    const teamASelect = document.getElementById("teamA");
+    const teamBSelect = document.getElementById("teamB");
+    const matchDateInput = document.getElementById("matchDate");
+    const matchTimeInput = document.getElementById("matchTimeInput");
+    const setUpcomingMatchBtn = document.getElementById("setUpcomingMatchBtn");
+
+    const team1Select = document.getElementById("team1");
+    const team2Select = document.getElementById("team2");
+    const score1Input = document.getElementById("score1");
+    const score2Input = document.getElementById("score2");
+    const addPastMatchBtn = document.getElementById("addPastMatchBtn");
+
+    // Admin panel açma kapama & şifre yönetimi
+    let pin = "";
+    openAdminBtn.addEventListener("click", () => {
+      if (!adminPanel.classList.contains("hidden")) {
+        // Panel açık ise kapat
+        adminPanel.classList.add("hidden");
+        keypadPanel.classList.add("hidden");
+      } else {
+        // Panel kapalı ise şifre sor
+        keypadPanel.classList.remove("hidden");
+      }
+      pin = "";
+      pinDisplay.value = "";
+    });
+
+    keypadButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (pin.length < 4) {
+          pin += btn.dataset.key;
+          pinDisplay.value = "*".repeat(pin.length);
+        }
+      });
+    });
+
+    clearPinBtn.addEventListener("click", () => {
+      pin = "";
+      pinDisplay.value = "";
+    });
+
+    enterPinBtn.addEventListener("click", () => {
+      if (pin === "1453") {
+        adminPanel.classList.remove("hidden");
+        keypadPanel.classList.add("hidden");
+        pin = "";
+        pinDisplay.value = "";
+      } else {
+        alert("Hatalı şifre!");
+        pin = "";
+        pinDisplay.value = "";
+      }
+    });
+
+    // Takımları Firebase'den çek ve göster
+    function renderTeams(snapshot) {
+      rankingDiv.innerHTML = "";
+      const teams = [];
+      snapshot.forEach(childSnap => {
+        teams.push(childSnap.val());
+      });
+      teams.sort((a,b) => b.wins - a.wins);
+      teams.forEach((team, i) => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<h3>${i+1}. ${team.name}</h3><p>Kazanma: ${team.wins}</p>`;
+        rankingDiv.appendChild(div);
+      });
+      // Dropdown'ları güncelle
+      updateDropdowns(teams);
+    }
+
+    // Dropdownları güncelle (takımlar)
+    function updateDropdowns(teams) {
+      [teamASelect, teamBSelect, team1Select, team2Select].forEach(sel => {
+        sel.innerHTML = "";
+        teams.forEach(team => {
+          const opt = document.createElement("option");
+          opt.value = team.name;
+          opt.textContent = team.name;
+          sel.appendChild(opt);
+        });
+      });
+    }
+
+    // Firebase "teams" referansı
+    const teamsRef = ref(db, "teams");
+    onValue(teamsRef, renderTeams);
+
+    // Takım ekleme
+    addTeamBtn.addEventListener("click", async () => {
+      const name = teamNameInput.value.trim();
+      if (!name) return alert("Takım adı boş olamaz!");
+      // Önce aynı isim varsa engelle (Firebase’de aynı anahtar olmaması için)
+      const teamRef = ref(db, "teams/" + name);
+      await set(teamRef, { name, wins: 0 });
+      teamNameInput.value = "";
+    });
+
+    // Yaklaşan maçı göster
+    function renderUpcomingMatch(snapshot) {
+      const data = snapshot.val();
+      if (!data) {
+        upcomingMatchText.textContent = "Henüz belirlenmedi";
+        upcomingMatchTime.textContent = "Tarih: - | Saat: -";
+        return;
+      }
+      upcomingMatchText.textContent = `${data.teamA} vs ${data.teamB}`;
+      upcomingMatchTime.textContent = `Tarih: ${data.date} | Saat: ${data.time}`;
+    }
+    const upcomingMatchRef = ref(db, "upcomingMatch");
+    onValue(upcomingMatchRef, renderUpcomingMatch);
+
+    // Yeni maç belirleme
+    setUpcomingMatchBtn.addEventListener("click", async () => {
+      const teamA = teamASelect.value;
+      const teamB = teamBSelect.value;
+      const date = matchDateInput.value;
+      const time = matchTimeInput.value;
+      if (!teamA || !teamB || !date || !time) return alert("Tüm alanları doldurun");
+      if (teamA === teamB) return alert("Takımlar farklı olmalı!");
+      await set(upcomingMatchRef, { teamA, teamB, date, time });
+      alert("Yaklaşan maç güncellendi");
+      matchDateInput.value = "";
+      matchTimeInput.value = "";
+    });
+
+    // Geçmiş maçları listele
+    const pastMatchesRef = ref(db, "pastMatches");
+    onValue(pastMatchesRef, snapshot => {
+      pastMatchesBody.innerHTML = "";
+      snapshot.forEach(childSnap => {
+        const m = childSnap.val();
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${m.score1} - ${m.score2}</td><td>${m.team1}</td><td>${m.team2}</td>`;
+        pastMatchesBody.appendChild(tr);
+      });
+    });
+
+    // Skor ekleme
+    addPastMatchBtn.addEventListener("click", async () => {
+      const team1 = team1Select.value;
+      const team2 = team2Select.value;
+      const score1 = parseInt(score1Input.value);
+      const score2 = parseInt(score2Input.value);
+      if (!team1 || !team2) return alert("Takımları seçin");
+      if (team1 === team2) return alert("Takımlar farklı olmalı!");
+      if (isNaN(score1) || isNaN(score2)) return alert("Skorları girin");
+
+      // Skoru kaydet
+      const newMatchRef = push(pastMatchesRef);
+      await set(newMatchRef, { team1, team2, score1, score2 });
+
+      // Kazanan takımın wins sayısını artır
+      if(score1 > score2) {
+        const winnerRef = ref(db, "teams/" + team1 + "/wins");
+        onValue(winnerRef, (snap) => {
+          let wins = snap.val() || 0;
+          update(ref(db, "teams/" + team1), { wins: wins + 1 });
+        }, { onlyOnce: true });
+      } else if(score2 > score1) {
+        const winnerRef = ref(db, "teams/" + team2 + "/wins");
+        onValue(winnerRef, (snap) => {
+          let wins = snap.val() || 0;
+          update(ref(db, "teams/" + team2), { wins: wins + 1 });
+        }, { onlyOnce: true });
+      }
+
+      // Formu temizle
+      score1Input.value = "";
+      score2Input.value = "";
+    });
+  </script>
+
+</body>
+</html>
