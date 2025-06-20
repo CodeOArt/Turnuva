@@ -1031,6 +1031,134 @@
             color: var(--secondary-color);
         }
 
+        /* --- Videolar Modalı Stilleri (YENİ) --- */
+        .videos-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10006; /* En yüksek z-index */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed), visibility var(--transition-speed);
+        }
+        .videos-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .videos-modal {
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px; /* Daha geniş video alanı için */
+            box-shadow: var(--shadow-heavy);
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            position: relative;
+            max-height: 90vh; /* Ekranın %90'ını kaplar */
+            overflow-y: auto; /* İçerik taşarsa kaydırma çubuğu */
+            box-sizing: border-box;
+            border: 2px solid var(--primary-color);
+            text-align: center;
+        }
+        .videos-overlay.show .videos-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .videos-modal h2 {
+            color: var(--primary-color);
+            font-size: 2.2em;
+            margin-bottom: 1em;
+            text-shadow: 0 0 10px rgba(29, 233, 182, 0.5);
+        }
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        .video-item {
+            background: rgba(31, 31, 31, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .video-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        }
+        .video-item .video-responsive {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+        }
+        .video-item .video-responsive iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .video-item h3 {
+            font-size: 1.1em;
+            color: var(--secondary-color);
+            margin: 15px 10px 10px;
+            text-align: left;
+            text-transform: none; /* Başlık stilini koru */
+            letter-spacing: normal;
+            text-shadow: none;
+        }
+        .video-item p {
+            font-size: 0.9em;
+            color: #ccc;
+            margin: 0 10px 15px;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        /* Sosyal Medya Bölümü Stilleri */
+        .social-media-links {
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+        .social-media-links h3 {
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        .social-media-links a {
+            display: inline-block;
+            font-size: 2.2em;
+            color: var(--text-light);
+            margin: 0 15px;
+            transition: color var(--transition-speed), transform var(--transition-speed);
+        }
+        .social-media-links a:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+        .social-media-links a.facebook:hover { color: #3b5998; }
+        .social-media-links a.youtube:hover { color: #ff0000; }
+        .social-media-links a.instagram:hover {
+            background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.4em; /* İkonu biraz büyüt Instagram için */
+        }
+        .social-media-links a.twitter:hover { color: #00acee; }
+
 
         /* Responsive Ayarlamalar */
         @media (max-width: 1024px) { /* Tablet ve büyük mobil cihazlar */
@@ -1044,6 +1172,10 @@
             .players-modal, .news-detail-modal, .announcement-modal { max-width: 700px; } /* Modalların max genişliği */
             #usersTable { min-width: 600px; } /* Tablet için min genişlik */
             #playersTable { min-width: 450px; }
+            .videos-modal { max-width: 700px; padding: 25px; }
+            .videos-modal h2 { font-size: 2em; }
+            .video-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+            .social-media-links a { font-size: 2em; margin: 0 10px; }
         }
 
         @media (max-width: 768px) {
@@ -1092,6 +1224,14 @@
             .announcement-modal h2 { font-size: 1.8em; }
             .announcement-modal p { font-size: 1em; }
             .announcement-modal button { font-size: 0.9em; padding: 0.7em 1.2em; }
+
+            .videos-modal { max-width: 95%; padding: 20px; }
+            .videos-modal h2 { font-size: 1.8em; }
+            .video-grid { grid-template-columns: 1fr; } /* Mobil için tek sütun */
+            .video-item h3 { font-size: 1em; }
+            .video-item p { font-size: 0.8em; }
+            .social-media-links a { font-size: 1.8em; margin: 0 8px; }
+            .social-media-links a.instagram:hover { font-size: 2em; }
         }
         @media (max-width: 480px) {
             h1 { font-size: 2em; }
@@ -1110,6 +1250,11 @@
             .announcement-modal h2 { font-size: 1.6em; }
             .announcement-modal p { font-size: 0.9em; }
             .announcement-modal button { font-size: 0.8em; padding: 0.6em 1em; }
+
+            .videos-modal { padding: 15px; }
+            .videos-modal h2 { font-size: 1.6em; }
+            .social-media-links a { font-size: 1.5em; margin: 0 5px; }
+            .social-media-links a.instagram:hover { font-size: 1.7em; }
 
             /* Tiny Screens - Additional adjustments */
             .flex-row > select, .flex-row > input { min-width: auto; } /* Daha küçük ekranlarda min-width'i kaldır */
@@ -1135,7 +1280,7 @@
                 <li><a href="#matches" class="nav-link">Maçlar</a></li>
                 <li><a href="#news" class="nav-link">Haberler</a></li>
                 <li><a href="#stats" class="nav-link">İstatistikler</a></li>
-            </ul>
+                <li><a href="#" id="videosLink" class="nav-link">Videolar</a></li> </ul>
         </nav>
         <div class="header-right">
             <button id="loginButton" class="hidden"><i class="fas fa-sign-in-alt"></i> Giriş Yap / Kayıt Ol</button>
@@ -1384,6 +1529,39 @@
         </div>
     </div>
 
+    <div class="videos-overlay">
+        <div class="videos-modal">
+            <button class="close-btn" id="closeVideosModal">&times;</button>
+            <h2><i class="fas fa-video"></i> YeşilTepe FC Videoları</h2>
+            <div class="video-grid">
+                <div class="video-item">
+                    <h3>Maçtan Kesitler: Goller ve Kurtarışlar</h3>
+                    <div class="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/another_video_id?si=ijklmnop" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <p>Geçtiğimiz haftanın en güzel golleri ve kalecimizin inanılmaz kurtarışları!</p>
+                </div>
+                <div class="video-item">
+                    <h3>Transfer Görüntüleri: Takım Ruhu</h3>
+                    <div class="video-responsive">
+                        <iframe src="https://www.youtube.com/embed/another_video_id?si=ijklmnop" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    </div>
+                    <p>Yeni sezon hazırlıkları tam gaz devam ediyor. Takım ruhu her şeyden önemli!</p>
+                </div>
+               
+            </div>
+
+            <div class="social-media-links">
+                <h3>Bizi Sosyal Medyada Takip Edin!</h3>
+                <div>
+                   
+                    <a href="https://youtube.com/@YeşilTepeFC" target="_blank" class="youtube" aria-label="YouTube Kanalımız"><i class="fab fa-youtube"></i></a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script type="module">
         // Firebase Modüllerini Doğru Yollardan Import Edin
@@ -1466,6 +1644,11 @@
         const announcementContent = document.getElementById('announcementContent');
         const announcementDate = document.getElementById('announcementDate');
         const closeAnnouncementModal = document.getElementById('closeAnnouncementModal');
+
+        // Videolar Modalı (YENİ EKLENDİ)
+        const videosLink = document.getElementById('videosLink');
+        const videosOverlay = document.querySelector('.videos-overlay');
+        const closeVideosModal = document.getElementById('closeVideosModal');
 
 
         // Giriş/Kayıt Modal Elemanları
@@ -1572,6 +1755,16 @@
         // --- Navigasyon ve Hamburger Menü İşlevselliği ---
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
+                // Eğer tıklanan link "Videolar" linkiyse varsayılan davranışı engelle ve modalı aç
+                if (this.id === 'videosLink') {
+                    e.preventDefault();
+                    videosOverlay.classList.add('show');
+                    // Mobil menüyü kapat
+                    hamburgerMenu.classList.remove('active');
+                    navMenu.classList.remove('show');
+                    return; // Diğer işlemlere geçme
+                }
+
                 e.preventDefault();
                 // Active sınıfını kaldır
                 navLinks.forEach(l => l.classList.remove('active'));
@@ -1608,6 +1801,11 @@
             });
 
             navLinks.forEach(link => {
+                // "Videolar" linkini scroll ile aktif yapma
+                if (link.id === 'videosLink') {
+                    link.classList.remove('active');
+                    return;
+                }
                 link.classList.remove('active');
                 if (link.getAttribute('href').includes(currentActive)) {
                     link.classList.add('active');
@@ -2057,6 +2255,19 @@
                 }
             }
         }
+
+        // --- Videolar Modalı Fonksiyonelliği (YENİ EKLENDİ) ---
+        closeVideosModal.addEventListener('click', () => {
+            videosOverlay.classList.remove('show');
+        });
+
+        // Modala dışarı tıklayarak kapatma
+        videosOverlay.addEventListener('click', (e) => {
+            if (e.target === videosOverlay) {
+                videosOverlay.classList.remove('show');
+            }
+        });
+
 
         // --- Kullanıcı Giriş/Kayıt Fonksiyonları ---
 
