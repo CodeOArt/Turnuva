@@ -931,16 +931,15 @@
 
 
         /* Responsive Ayarlamalar */
-        @media (max-width: 992px) {
-            h1 { font-size: 3.5em; }
-            h2 { font-size: 2em; }
-            h3 { font-size: 1.6em; }
-            nav ul { gap: 15px; }
-            .hero-section { padding: 60px 20px; }
-            .hero-section h1 { font-size: 3.5em; }
-            .hero-section p { font-size: 1.2em; }
-            .hero-button { padding: 12px 25px; font-size: 1.1em; }
-            .news-section .news-list { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        @media (max-width: 1024px) { /* Tablet ve büyük mobil cihazlar */
+            h1 { font-size: 3em; }
+            h2 { font-size: 2.2em; }
+            .hero-section h1 { font-size: 3em; }
+            .hero-section p { font-size: 1.3em; }
+            .section-card { padding: 25px; margin: 18px auto; }
+            th, td { padding: 12px; font-size: 15px; }
+            .news-section .news-list { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); } /* Tablette iki veya üç sütun */
+            .players-modal, .news-detail-modal { max-width: 800px; }
         }
 
         @media (max-width: 768px) {
@@ -976,7 +975,7 @@
             .hero-section p { font-size: 1em; }
             .hero-button { padding: 10px 20px; font-size: 1em; }
             .news-section .news-list { grid-template-columns: 1fr; } /* Tek sütun */
-            .players-modal, .news-detail-modal { padding: 20px; } /* Mobil modal dolgusu */
+            .players-modal, .news-detail-modal { padding: 20px; max-width: 90%; } /* Mobil modal dolgusu */
             #playersTable th, #playersTable td { padding: 10px; font-size: 13px; }
             .player-table-img { width: 30px; height: 30px; }
             .image-preview { width: 80px; height: 80px; }
@@ -1180,7 +1179,7 @@
 
     <footer>
         <p>&copy; 2025 YeşilTepe Futbol Turnuvası. Tüm Hakları Saklıdır.</p>
-        <p>Bize Ulaşın: <a href="mailto:info@yesiltepefutbol.com">info@yesiltepefutbol.com</a></p>
+        <p>Bize Ulaşın: <a href="mailto:yesiltepefutbol@gmail.com">yesiltepefutbol@gmail.com</a></p>
     </footer>
 
 
@@ -1210,9 +1209,6 @@
                 <select id="registerPosition">
                     <option value="">Mevki Seçin</option>
                 </select>
-                <input type="url" id="profilePictureUrl" placeholder="Profil Fotoğrafı URL'si (İsteğe Bağlı)" />
-                <img id="profilePicturePreview" class="image-preview hidden" alt="Profil Fotoğrafı Önizleme" src="" />
-
                 <input type="email" id="registerEmail" placeholder="E-posta" />
                 <input type="password" id="registerPassword" placeholder="Şifre (Min 6 Karakter)" />
                 <input type="password" id="registerConfirmPassword" placeholder="Şifre Tekrar" />
@@ -1348,8 +1344,8 @@
         const registerAgeInput = document.getElementById("registerAge");
         const registerTeamSelect = document.getElementById("registerTeam");
         const registerPositionSelect = document.getElementById("registerPosition");
-        const profilePictureUrlInput = document.getElementById("profilePictureUrl"); // DEĞİŞTİ
-        const profilePicturePreview = document.getElementById("profilePicturePreview");
+        // const profilePictureUrlInput = document.getElementById("profilePictureUrl"); // ARTIK YOK
+        // const profilePicturePreview = document.getElementById("profilePicturePreview"); // ARTIK YOK
         const registerEmailInput = document.getElementById("registerEmail");
         const registerPasswordInput = document.getElementById("registerPassword");
         const registerConfirmPasswordInput = document.getElementById("registerConfirmPassword");
@@ -1380,8 +1376,6 @@
         const ADMIN_EMAIL = "admin@gmail.com";
 
         let currentAuthMode = 'login';
-        // let selectedProfileFile = null; // Artık kullanılmıyor
-        // let selectedTeamLogoFile = null; // Artık kullanılmıyor
 
         // Mevki seçenekleri (Türkçe)
         const positions = [
@@ -1483,7 +1477,7 @@
 
 
         // --- Takım Yönetimi ---
-        let currentTeamsData = []; // Global olarak takım verilerini tutmak için
+        let allTeamsData = []; // Global olarak takım verilerini tutmak için
 
         function renderTeams(snapshot) {
             rankingBody.innerHTML = "";
@@ -1492,7 +1486,7 @@
                 teams.push(childSnap.val());
             });
             teams.sort((a, b) => (b.points || 0) - (a.points || 0));
-            currentTeamsData = teams; // Global değişkeni güncelle
+            allTeamsData = teams; // Global değişkeni güncelle
 
             teams.forEach((team, i) => {
                 const tr = document.createElement("tr");
@@ -1908,9 +1902,9 @@
             registerAgeInput.value = '';
             registerTeamSelect.value = '';
             registerPositionSelect.value = '';
-            profilePictureUrlInput.value = ''; // URL input temizlendi
-            profilePicturePreview.src = '';
-            profilePicturePreview.classList.add('hidden');
+            // profilePictureUrlInput.value = ''; // ARTIK YOK
+            // profilePicturePreview.src = ''; // ARTIK YOK
+            // profilePicturePreview.classList.add('hidden'); // ARTIK YOK
             registerEmailInput.value = '';
             registerPasswordInput.value = '';
             registerConfirmPasswordInput.value = '';
@@ -1940,31 +1934,17 @@
                 registerAgeInput.value = '';
                 registerTeamSelect.value = '';
                 registerPositionSelect.value = '';
-                profilePictureUrlInput.value = ''; // URL input temizlendi
-                profilePicturePreview.src = '';
-                profilePicturePreview.classList.add('hidden');
+                // profilePictureUrlInput.value = ''; // ARTIK YOK
+                // profilePicturePreview.src = ''; // ARTIK YOK
+                // profilePicturePreview.classList.add('hidden'); // ARTIK YOK
                 registerEmailInput.value = '';
                 registerPasswordInput.value = '';
                 registerConfirmPasswordInput.value = '';
             }
         });
 
-        // Profil fotoğrafı URL'den önizlemesi
-        profilePictureUrlInput.addEventListener('input', (event) => {
-            const url = event.target.value;
-            if (url) {
-                profilePicturePreview.src = url;
-                profilePicturePreview.classList.remove('hidden');
-                // URL'nin geçerli bir resim olup olmadığını kontrol etmek için yükleme hatası dinleyicisi
-                profilePicturePreview.onerror = () => {
-                    profilePicturePreview.src = DEFAULT_AVATAR_URL;
-                    showAlert("Geçersiz profil fotoğrafı URL'si. Varsayılan avatar kullanılacak.", 'warning', 2000);
-                };
-            } else {
-                profilePicturePreview.src = '';
-                profilePicturePreview.classList.add('hidden');
-            }
-        });
+        // Profil fotoğrafı URL'den önizlemesi kaldırıldı
+        // profilePictureUrlInput.addEventListener('input', (event) => { /* ... */ });
 
         registerUserBtn.addEventListener('click', async () => {
             const name = registerNameInput.value.trim();
@@ -1975,9 +1955,8 @@
             const email = registerEmailInput.value.trim();
             const password = registerPasswordInput.value;
             const confirmPassword = registerConfirmPasswordInput.value;
-            const profilePictureUrl = profilePictureUrlInput.value.trim();
 
-            if (!name || !surname || isNaN(age) || !team || !position || !email || !!password || !confirmPassword) {
+            if (!name || !surname || isNaN(age) || !team || !position || !email || !password || !confirmPassword) {
                 showAlert("Lütfen tüm zorunlu alanları doldurun (Ad, Soyad, Yaş, Takım, Mevki, E-posta, Şifre).", 'warning');
                 return;
             }
@@ -1998,8 +1977,9 @@
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // URL boşsa veya geçersizse varsayılan avatar kullan
-                const finalPhotoURL = (profilePictureUrl && isValidUrl(profilePictureUrl)) ? profilePictureUrl : DEFAULT_AVATAR_URL;
+                // Seçilen takımın logosunu bul
+                const selectedTeam = allTeamsData.find(t => t.name === team);
+                const profilePictureFromTeam = selectedTeam ? (selectedTeam.logo || DEFAULT_AVATAR_URL) : DEFAULT_AVATAR_URL;
 
                 await set(ref(db, 'users/' + user.uid), {
                     name: name,
@@ -2008,7 +1988,7 @@
                     team: team,
                     position: position,
                     email: email,
-                    profilePicture: finalPhotoURL,
+                    profilePicture: profilePictureFromTeam, // Takım logosu atandı
                     role: 'player' // Varsayılan rol 'player'
                 });
 
@@ -2175,7 +2155,8 @@
                         });
                         noPlayersMessage.classList.add('hidden');
                     } else {
-                        noPlayersMessage.classList.remove('hidden');
+                        usersTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #9e9e9e;">Bu takımda henüz oyuncu bulunmamaktadır.</td></tr>';
+                        noPlayersMessage.classList.remove('hidden'); // No players message göster
                     }
                     playersOverlay.classList.add('show');
                 }, { once: true });
