@@ -1474,8 +1474,8 @@
                 showAlert("Lütfen tüm zorunlu alanları doldurun (yaş, takım, mevki, e-posta, şifre).", 'warning');
                 return;
             }
-            if (age < 10 || age > 99) {
-                 showAlert("Geçerli bir yaş girin (10-99 arası).", 'warning');
+            if (age < 6 || age > 20) {
+                 showAlert("Geçerli bir yaş girin (6-20 arası).", 'warning');
                  return;
             }
             if (password.length < 6) {
