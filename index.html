@@ -3,17 +3,30 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>YeşilTepe Futbol Turnuvası</title>
+    <title>YeşilTepe Futbol Turnuvası - Resmi Web Sitesi</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Genel Stil Ayarları */
+        :root {
+            --primary-color: #1de9b6; /* Neon yeşil */
+            --secondary-color: #ff9100; /* Turuncu */
+            --dark-bg: #1a1a1a; /* Koyu arka plan */
+            --card-bg: rgba(31, 31, 31, 0.9); /* Kart arka planı */
+            --text-light: #f0f0f0; /* Açık metin */
+            --text-dark: #333; /* Koyu metin */
+            --border-color: rgba(255, 255, 255, 0.1); /* Hafif beyaz çerçeve */
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.3);
+            --shadow-heavy: 0 10px 30px rgba(0, 0, 0, 0.6);
+            --transition-speed: 0.3s ease-in-out;
+        }
+
         body {
             /* Dinamik arka plan ve üzerine hafif gradyan */
             background: url('https://images.unsplash.com/photo-1543888362-e64e9a6e3b5e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
             background-size: cover;
-            color: white;
+            color: var(--text-light);
             font-family: 'Montserrat', sans-serif;
-            padding: 20px;
             margin: 0;
             display: flex;
             flex-direction: column;
@@ -26,96 +39,68 @@
 
         body::before { /* Arka plan üzerine okunurluk için overlay */
             content: '';
-            position: absolute;
+            position: fixed; /* Fixed yaparak kaydırmada sabit kalmasını sağlar */
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(15, 32, 39, 0.8), rgba(32, 58, 67, 0.8), rgba(44, 83, 100, 0.8));
+            background: linear-gradient(135deg, rgba(15, 32, 39, 0.9), rgba(32, 58, 67, 0.9), rgba(44, 83, 100, 0.9));
             z-index: -1;
         }
 
-        /* Başlıklar */
-        h1, h2, h3 {
+        /* Temel Tipografi */
+        h1, h2, h3, h4 {
             text-align: center;
-            color: #1de9b6; /* Neon yeşil */
+            color: var(--primary-color);
             text-shadow: 0 0 10px rgba(29, 233, 182, 0.5), 0 0 20px rgba(29, 233, 182, 0.3);
             margin-bottom: 20px;
             letter-spacing: 1.5px;
             text-transform: uppercase;
         }
+        h1 { font-size: 3.5em; margin-bottom: 30px; }
+        h2 { font-size: 2.5em; margin-bottom: 25px; }
+        h3 { font-size: 1.8em; margin-bottom: 20px; }
+        h4 { font-size: 1.3em; margin-bottom: 15px; }
 
-        h1 { font-size: 3em; }
-        h2 { font-size: 2em; }
-        h3 { font-size: 1.5em; }
+        /* Konteynerler ve Genel Düzen */
+        #app-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 100px; /* Sabit header için boşluk */
+        }
 
         /* Bölüm Kartları */
         .section-card {
-            background: rgba(31, 31, 31, 0.9); /* Hafif şeffaf arka plan */
+            background: var(--card-bg);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--shadow-heavy);
             padding: 30px;
             margin: 20px auto;
-            max-width: 800px;
-            width: 100%; /* Max genişliğe kadar tam genişlik */
-            backdrop-filter: blur(5px); /* Buzlu cam efekti */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            max-width: 900px;
+            width: 100%;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--border-color);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
             box-sizing: border-box;
+            animation: fadeIn 0.8s ease-out forwards; /* Kartlar için giriş animasyonu */
         }
         .section-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
         }
 
-        /* Tablo Konteyneri */
-        .table-container {
-            overflow-x: auto; /* Küçük ekranlarda tabloyu kaydırılabilir yapar */
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        /* Tablolar */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background: rgba(31, 31, 31, 0.7); /* Tablo da hafif şeffaf */
-            border-radius: 16px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        th, td {
-            padding: 14px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Hafif çizgi */
-            vertical-align: middle; /* Resimlerin dikey ortalanması */
-        }
-        th {
-            background: #1de9b6;
-            color: black;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        tr:last-child td {
-            border-bottom: none; /* Son satırın alt çizgisini kaldırır */
-        }
-        tr.team-row:hover, tr.player-row:hover { /* Takım sıralaması satırları üzerine gelince */
-            background-color: #2c3e50;
-            cursor: pointer;
-        }
-        tr.player-detail-row td {
-            background-color: rgba(60, 60, 60, 0.9); /* Detay satırı arka planı */
-            font-size: 0.9em;
-            color: #1de9b6;
-            text-align: left;
-            padding-left: 30px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Input, Select, Button Genel Stilleri */
-        input, select, button {
+        input, select, button, textarea {
             width: 100%;
             padding: 12px;
             margin: 8px 0;
@@ -125,33 +110,33 @@
             outline: none;
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif;
-            transition: all 0.3s ease;
+            transition: all var(--transition-speed);
         }
         input[type="file"] {
-            padding: 8px; /* File input için daha küçük padding */
+            padding: 8px;
         }
-        input, select {
+        input, select, textarea {
             background: #333;
-            color: white;
-            border: 1px solid #1de9b6; /* Tutarlı çerçeve rengi */
+            color: var(--text-light);
+            border: 1px solid var(--primary-color);
         }
-        input:focus, select:focus {
-            border-color: #ff9100; /* Odaklandığında turuncu */
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--secondary-color);
             box-shadow: 0 0 12px rgba(255, 145, 0, 0.5);
             transform: scale(1.01);
         }
 
         button {
-            background: #1de9b6;
-            color: black;
+            background: var(--primary-color);
+            color: var(--text-dark);
             font-weight: bold;
             cursor: pointer;
             user-select: none;
             box-shadow: 0 4px 15px rgba(29, 233, 182, 0.4);
         }
         button:hover {
-            background: #ff9100; /* Hover'da turuncu vurgu */
-            color: black;
+            background: var(--secondary-color);
+            color: var(--text-dark);
             transform: translateY(-3px) scale(1.01);
             box-shadow: 0 6px 20px rgba(255, 145, 0, 0.6);
         }
@@ -164,6 +149,429 @@
         .hidden {
             display: none !important;
         }
+        .initially-hidden-admin-panel {
+            display: none; /* Admin paneli varsayılan olarak gizli */
+        }
+
+        /* Flexbox Düzenleri */
+        .flex-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+            flex-wrap: wrap; /* Küçük ekranlarda sarmalama */
+        }
+        .flex-row > select, .flex-row > input {
+            flex: 1;
+            min-width: 120px; /* Minimum genişlik ver */
+        }
+        .flex-row span {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        /* Resim Önizleme Stilleri */
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            margin: 15px auto;
+            display: block;
+        }
+        .image-preview.small {
+            width: 80px;
+            height: 80px;
+            border-color: var(--secondary-color);
+        }
+
+
+        /* --- Custom Alert Stilleri --- */
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity var(--transition-speed);
+            pointer-events: none;
+        }
+        .custom-alert-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .custom-alert-modal {
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow-heavy);
+            text-align: center;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out, border-color 0.1s ease-in-out;
+            border: 2px solid transparent;
+        }
+        .custom-alert-modal.warning { border-color: var(--secondary-color); animation: scaleIn 0.4s ease-out forwards, blinkWarning 1s infinite alternate; }
+        .custom-alert-modal.success { border-color: var(--primary-color); animation: scaleIn 0.4s ease-out forwards; }
+        .custom-alert-modal.error { border-color: #ff4d4d; animation: scaleIn 0.4s ease-out forwards, blinkError 1s infinite alternate; }
+        .custom-alert-modal.info { border-color: #5bb2e9; animation: scaleIn 0.4s ease-out forwards; }
+
+        .custom-alert-header {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .custom-alert-header i { /* Font Awesome ikonları için */
+            font-size: 1.2em;
+            line-height: 1;
+        }
+        .custom-alert-header.warning { color: var(--secondary-color); }
+        .custom-alert-header.success { color: var(--primary-color); }
+        .custom-alert-header.error { color: #ff4d4d; }
+        .custom-alert-header.info { color: #5bb2e9; }
+
+        .custom-alert-body {
+            font-size: 18px;
+            line-height: 1.5;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+        @keyframes scaleIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes scaleOut { from { transform: scale(1); opacity: 1; } to { transform: scale(0.8); opacity: 0; } }
+        @keyframes blinkWarning { 0% { border-color: var(--secondary-color); } 50% { border-color: rgba(255, 145, 0, 0.4); } 100% { border-color: var(--secondary-color); } }
+        @keyframes blinkError { 0% { border-color: #ff4d4d; } 50% { border-color: rgba(255, 77, 77, 0.4); } 100% { border-color: #ff4d4d; } }
+        .custom-alert-modal.hide { animation: scaleOut 0.3s ease-in forwards; }
+
+        /* --- Auth/Login/Profile Bar Stilleri --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 32, 39, 0.95); /* Koyu, hafif şeffaf */
+            padding: 10px 20px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+            z-index: 100; /* En üstte */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            transition: all var(--transition-speed);
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 8px rgba(29, 233, 182, 0.5);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo i {
+            font-size: 1.2em;
+        }
+
+        /* Navigasyon Menüsü */
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 25px;
+        }
+        nav ul li a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 0;
+            position: relative;
+            transition: color var(--transition-speed);
+        }
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width var(--transition-speed);
+        }
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        nav ul li a:hover::after, nav ul li a.active::after {
+            width: 100%;
+        }
+        nav ul li a.active {
+            color: var(--primary-color);
+        }
+
+        /* Oturum Durumu ve Admin Butonu Konteyneri */
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .auth-status-bar {
+            padding: 8px 12px;
+            background: rgba(31, 31, 31, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 60;
+            transition: all var(--transition-speed);
+            color: var(--text-light);
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+        .auth-status-bar.logged-in {
+            background: rgba(29, 233, 182, 0.8);
+            color: var(--text-dark);
+            font-weight: bold;
+        }
+        .auth-status-bar button {
+            background: #ff4d4d;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            box-shadow: none;
+            width: auto;
+            margin: 0;
+        }
+        .auth-status-bar button:hover {
+            background: #cc0000;
+            transform: none;
+            box-shadow: none;
+        }
+        .profile-status-img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #000;
+        }
+
+        #loginButton {
+            background: var(--secondary-color);
+            color: var(--text-dark);
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 8px;
+            z-index: 60;
+            box-shadow: 0 4px 10px rgba(255, 145, 0, 0.4);
+            width: auto;
+            margin: 0;
+            transition: all var(--transition-speed);
+        }
+        #loginButton.hidden { display: none !important; }
+
+        .admin-panel-toggle-container {
+            transition: all var(--transition-speed);
+        }
+        #adminPanelToggleBtn {
+            background: #5bb2e9;
+            color: white;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(91, 178, 233, 0.4);
+            width: auto;
+            margin: 0;
+        }
+        #adminPanelToggleBtn:hover {
+            background: #3a8ee0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(58, 142, 224, 0.6);
+        }
+
+        /* Hamburger Menü (Mobil) */
+        .hamburger-menu {
+            display: none; /* Varsayılan olarak gizli */
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 101; /* Navigasyon üzerinde */
+        }
+        .hamburger-menu .bar {
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-color);
+            margin: 4px 0;
+            transition: all 0.3s ease-in-out;
+        }
+        .hamburger-menu.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger-menu.active .bar:nth-child(1) {
+            transform: translateY(7px) rotate(45deg);
+        }
+        .hamburger-menu.active .bar:nth-child(3) {
+            transform: translateY(-7px) rotate(-45deg);
+        }
+        .nav-menu.mobile-active {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 60px; /* Header yüksekliğine göre ayarla */
+            left: 0;
+            width: 100%;
+            background: rgba(15, 32, 39, 0.98);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            gap: 15px;
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            border-top: 1px solid var(--border-color);
+        }
+        .nav-menu.mobile-active.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .nav-menu.mobile-active li a {
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            width: 100%;
+        }
+        .nav-menu.mobile-active li:last-child a {
+            border-bottom: none;
+        }
+
+
+        /* Hero Section */
+        .hero-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 20px;
+            width: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)); /* Üzerine hafif gradyan */
+            margin-bottom: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-heavy);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            margin-top: 100px; /* Header altından başla */
+        }
+        .hero-section::before { /* Parçacık veya desen efekti */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(29, 233, 182, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            opacity: 0.5;
+            z-index: 0;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            animation: slideInUp 1s ease-out forwards;
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-section h1 {
+            font-size: 4.5em;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+            text-shadow: 0 0 20px var(--primary-color), 0 0 30px rgba(29, 233, 182, 0.7);
+        }
+        .hero-section p {
+            font-size: 1.5em;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            max-width: 700px;
+            line-height: 1.6;
+            text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
+        .hero-button {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: var(--text-dark);
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2em;
+            box-shadow: 0 8px 20px rgba(255, 145, 0, 0.5);
+            transition: all var(--transition-speed);
+        }
+        .hero-button:hover {
+            background: #ffc107;
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 12px 25px rgba(255, 193, 7, 0.7);
+        }
+
+        /* --- Takım Sıralaması Stilleri (Mevcut) --- */
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(31, 31, 31, 0.7);
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+        th, td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        th {
+            background: var(--primary-color);
+            color: var(--text-dark);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr.team-row:hover, tr.player-row:hover {
+            background-color: #2c3e50;
+            cursor: pointer;
+        }
+        tr.player-detail-row td {
+            background-color: rgba(60, 60, 60, 0.9);
+            font-size: 0.9em;
+            color: var(--primary-color);
+            text-align: left;
+            padding-left: 30px;
+        }
 
         /* Maç Etiketleri */
         .match-tag {
@@ -172,12 +580,12 @@
             font-weight: bold;
             font-size: 12px;
             display: inline-block;
-            white-space: nowrap; /* Etiketlerin tek satırda kalmasını sağlar */
+            white-space: nowrap;
         }
         .tag-league {
             background-color: rgba(29, 233, 182, 0.2);
-            color: #1de9b6;
-            border: 1px solid #1de9b6;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
         }
         .tag-friendly {
             background-color: rgba(158, 158, 158, 0.2);
@@ -185,335 +593,92 @@
             border: 1px solid #9e9e9e;
         }
 
-        /* Esnek Sıra Düzenleri */
-        .flex-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-        .flex-row > select, .flex-row > input {
-            flex: 1; /* Esnek öğeleri eşit genişliğe yayar */
-        }
-        .flex-row span {
-            font-weight: bold;
-            color: #1de9b6; /* "vs" ve "-" yazıları */
-        }
-
-        /* Bildirim Ayarları Durum Metni */
-        .notification-status {
-            margin-top: 10px;
-            text-align: center;
-            font-weight: bold;
-            color: #9e9e9e;
-        }
-
         /* Yaklaşan Maç Kutusu */
         #upcomingMatchBox {
-            border: 2px solid #ff9100; /* Turuncu çerçeve */
+            border: 2px solid var(--secondary-color);
             padding: 25px;
-            background: rgba(255, 145, 0, 0.1); /* Hafif turuncu arka plan */
-            animation: pulseOrange 2s infinite alternate; /* Hafif turuncu nabız efekti */
-            border-radius: 16px; /* Köşeleri yuvarlak */
+            background: rgba(255, 145, 0, 0.1);
+            animation: pulseOrange 2s infinite alternate;
+            border-radius: 16px;
         }
         #countdown {
             font-size: 1.8em;
             font-weight: bold;
-            color: #1de9b6;
+            color: var(--primary-color);
             text-align: center;
             margin-top: 15px;
             text-shadow: 0 0 8px rgba(29, 233, 182, 0.5);
         }
-
-        /* Animasyonlar */
         @keyframes pulseOrange {
-            from { border-color: #ff9100; box-shadow: 0 0 15px rgba(255, 145, 0, 0.4); }
+            from { border-color: var(--secondary-color); box-shadow: 0 0 15px rgba(255, 145, 0, 0.4); }
             to { border-color: rgba(255, 145, 0, 0.5); box-shadow: 0 0 25px rgba(255, 145, 0, 0.8); }
         }
 
-        /* --- Auth/Login/Profile Bar Stilleri --- */
-        .auth-status-bar {
-            position: fixed; /* Fixed olarak ayarlandı */
-            top: 20px; /* Sağ üst köşe */
-            right: 20px; /* Sağ üst köşe */
-            padding: 10px 15px;
-            background: rgba(31, 31, 31, 0.9);
-            border-radius: 12px; /* Köşeler yuvarlak */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            display: flex; /* İçeriklerini yatayda sıralar */
-            align-items: center; /* Dikeyde ortalar */
-            gap: 10px; /* Elemanlar arası boşluk */
-            z-index: 60; /* En üstte */
-            transition: all 0.3s ease; /* Yumuşak geçiş */
-            color: white; /* Metin rengi */
-            font-size: 1em;
-            white-space: nowrap; /* İçeriğin tek satırda kalmasını sağlar */
-        }
-        .auth-status-bar.logged-in {
-            background: rgba(29, 233, 182, 0.8);
-            color: black;
-            font-weight: bold;
-        }
-        .auth-status-bar button {
-            background: #ff4d4d;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.9em;
-            box-shadow: none; /* Genel button shadow'ını sıfırla */
-            width: auto; /* Otomatik genişlik */
-            margin: 0; /* Margin sıfırla */
-        }
-        .auth-status-bar button:hover {
-            background: #cc0000;
-        }
-        .profile-status-img {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #000; /* Statüs barın rengine uyum */
-        }
-
-        #loginButton {
-            position: fixed; /* Fixed olarak ayarlandı */
-            top: 20px; /* Sağ üst köşe */
-            right: 20px; /* Sağ üst köşe */
-            background: #ff9100;
-            color: black;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 10px;
-            z-index: 60; /* En üstte */
-            box-shadow: 0 4px 15px rgba(255, 145, 0, 0.4);
-            width: auto;
+        /* Haberler Bölümü Stilleri */
+        .news-section .news-list {
+            list-style: none;
+            padding: 0;
             margin: 0;
-            transition: all 0.3s ease; /* Yumuşak geçiş */
+            display: grid; /* Grid sistemi ile haber kartlarını düzenle */
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 20px;
         }
-        #loginButton.hidden {
-            display: none !important;
-        }
-
-        /* Gizli dosya inputu için stil */
-        .custom-file-upload {
-            display: inline-block;
-            cursor: pointer;
-            padding: 10px 15px;
-            background-color: #5bb2e9;
-            color: white;
-            border-radius: 8px;
-            text-align: center;
-            width: 100%;
-            box-sizing: border-box;
-            margin-top: 10px;
-            transition: background-color 0.3s ease;
-        }
-        .custom-file-upload:hover {
-            background-color: #3a8ee0;
-        }
-        .custom-file-upload input[type="file"] {
-            display: none;
-        }
-
-        /* Yeni Admin Paneli Toggle Buton Stilleri */
-        .admin-panel-toggle-container {
-            position: fixed;
-            top: 60px; /* Login/Auth bar'ın altında */
-            right: 20px;
-            z-index: 59; /* Login/Auth bar'dan hemen daha düşük */
-            transition: all 0.3s ease;
-        }
-        #adminPanelToggleBtn {
-            background: #5bb2e9; /* Mavi tonu */
-            color: white;
-            font-weight: bold;
-            padding: 8px 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(91, 178, 233, 0.4);
-            width: auto;
-            margin: 0;
-        }
-        #adminPanelToggleBtn:hover {
-            background: #3a8ee0;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(58, 142, 224, 0.6);
-        }
-
-        /* Admin Paneli için başlangıçta gizli sınıf */
-        .initially-hidden-admin-panel {
-            display: none !important;
-        }
-
-
-        /* Responsive Ayarlamalar */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            h1 {
-                font-size: 2.5em; /* Daha küçük font */
-            }
-            h2 {
-                font-size: 1.8em;
-            }
-            h3 {
-                font-size: 1.3em;
-            }
-            th, td {
-                padding: 8px;
-                font-size: 14px;
-            }
-            .section-card {
-                padding: 15px;
-                margin: 15px auto;
-            }
-            input, select, button {
-                padding: 10px;
-                font-size: 14px;
-            }
-            .flex-row {
-                flex-direction: column; /* Mobil cihazlarda sütun düzeni */
-                gap: 5px;
-            }
-            .flex-row > select, .flex-row > input {
-                width: 100%;
-            }
-            /* Auth/Login Bar ve Buton için Mobil Ayarlar */
-            .auth-status-bar, #loginButton {
-                top: 10px;
-                right: 10px;
-                padding: 5px 10px;
-                font-size: 0.8em;
-                gap: 5px;
-            }
-            .profile-status-img {
-                width: 25px;
-                height: 25px;
-            }
-            .auth-status-bar button {
-                padding: 3px 6px;
-                font-size: 0.8em;
-            }
-            .admin-panel-toggle-container {
-                top: 50px; /* Mobil için daha uygun konum */
-                right: 10px;
-            }
-            #adminPanelToggleBtn {
-                padding: 5px 10px;
-                font-size: 0.8em;
-            }
-        }
-
-        /* --- Özel Uyarı (Custom Alert) Stilleri --- */
-        .custom-alert-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Daha koyu overlay */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000; /* AUTH MODAL'DAN DAHA YÜKSEK */
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            pointer-events: none; /* Tıklama olaylarını geçmesini sağlar */
-        }
-        .custom-alert-overlay.show {
-            opacity: 1;
-            pointer-events: auto; /* Gösterildiğinde tıklama olaylarına izin verir */
-        }
-        .custom-alert-modal {
-            background: #1f1f1f;
+        .news-item {
+            background: rgba(45, 45, 45, 0.7);
             border-radius: 12px;
-            padding: 30px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-            text-align: center;
-            transform: scale(0.8); /* Başlangıçta biraz küçülmüş */
-            opacity: 0;
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out, border-color 0.1s ease-in-out;
-            border: 2px solid transparent;
-        }
-        /* Uyarı tipleri için çerçeve renkleri */
-        .custom-alert-modal.warning {
-            border-color: #ff9100;
-            animation: scaleIn 0.4s ease-out forwards, blinkWarning 1s infinite alternate;
-        }
-        .custom-alert-modal.success {
-            border-color: #1de9b6;
-            animation: scaleIn 0.4s ease-out forwards;
-        }
-        .custom-alert-modal.error {
-            border-color: #ff4d4d;
-            animation: scaleIn 0.4s ease-out forwards, blinkError 1s infinite alternate;
-        }
-        .custom-alert-modal.info {
-            border-color: #5bb2e9;
-            animation: scaleIn 0.4s ease-out forwards;
-        }
-
-        /* Uyarı Başlıkları */
-        .custom-alert-header {
-            font-size: 28px; /* Daha büyük başlık */
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #1de9b6; /* Varsayılan */
+            padding: 20px;
+            border: 1px solid rgba(29, 233, 182, 0.2);
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px; /* İkon ile metin arası boşluk */
+            flex-direction: column;
+            justify-content: space-between;
+            height: auto; /* Haber kartı yüksekliğini esnek yap */
+            min-height: 200px; /* Minimum yükseklik ver */
         }
-        .custom-alert-header::before { /* İkonlar */
-            font-family: 'Arial'; /* Basit ikon için */
-            font-weight: normal;
+        .news-item:hover {
+            background: rgba(60, 60, 60, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        .news-item h4 {
+            color: var(--secondary-color);
+            margin-top: 0;
+            margin-bottom: 10px;
             font-size: 1.2em;
-            line-height: 1;
+            text-align: left;
+            text-shadow: none;
+            letter-spacing: normal;
+            text-transform: none;
         }
-        .custom-alert-header.warning { color: #ff9100; }
-        .custom-alert-header.warning::before { content: '⚠️'; }
-        .custom-alert-header.success { color: #1de9b6; }
-        .custom-alert-header.success::before { content: '✅'; }
-        .custom-alert-header.error { color: #ff4d4d; }
-        .custom-alert-header.error::before { content: '❌'; }
-        .custom-alert-header.info { color: #5bb2e9; }
-        .custom-alert-header.info::before { content: 'ℹ️'; }
-
-
-        /* Uyarı Gövdesi */
-        .custom-alert-body {
-            font-size: 18px;
+        .news-item p {
+            font-size: 0.9em;
+            color: #ccc;
             line-height: 1.5;
-            color: white;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            text-align: left;
+            flex-grow: 1; /* İçeriğin kart içinde esnek büyümesini sağlar */
+            overflow: hidden; /* Taşmayı gizle */
+            text-overflow: ellipsis; /* Üç nokta ekle */
+            display: -webkit-box;
+            -webkit-line-clamp: 4; /* Maksimum 4 satır göster (artırıldı) */
+            -webkit-box-orient: vertical;
+        }
+        .news-item .news-date {
+            font-size: 0.75em;
+            color: #9e9e9e;
+            text-align: right;
+            display: block;
+            margin-top: 10px;
+        }
+        #noNewsMessage {
+            grid-column: 1 / -1; /* Tüm sütunları kapla */
+            text-align: center;
+            color: #9e9e9e;
+            padding: 10px;
         }
 
-        /* Anahtar Kare Animasyonları */
-        @keyframes scaleIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        @keyframes scaleOut {
-            from { transform: scale(1); opacity: 1; }
-            to { transform: scale(0.8); opacity: 0; }
-        }
-        @keyframes blinkWarning {
-            0% { border-color: #ff9100; }
-            50% { border-color: rgba(255, 145, 0, 0.4); }
-            100% { border-color: #ff9100; }
-        }
-        @keyframes blinkError {
-            0% { border-color: #ff4d4d; }
-            50% { border-color: rgba(255, 77, 77, 0.4); }
-            100% { border-color: #ff4d4d; }
-        }
-        .custom-alert-modal.hide {
-            animation: scaleOut 0.3s ease-in forwards;
-        }
-
-        /* --- Giriş/Kayıt Modalı Stilleri --- */
+        /* --- Giriş/Kayıt Modalı Stilleri (Mevcut) --- */
         .auth-overlay {
             position: fixed;
             top: 0;
@@ -524,44 +689,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1001; /* Alert'ten daha düşük (Alert Z-index 10000) */
+            z-index: 1001;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            transition: opacity var(--transition-speed), visibility var(--transition-speed);
         }
-        .auth-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .auth-overlay.show { opacity: 1; visibility: visible; }
         .auth-modal {
             background: #1f1f1f;
             border-radius: 12px;
             padding: 30px;
             width: 90%;
             max-width: 450px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            box-shadow: var(--shadow-heavy);
             transform: translateY(-50px);
             opacity: 0;
             transition: transform 0.4s ease-out, opacity 0.4s ease-out;
             position: relative;
         }
-        .auth-overlay.show .auth-modal {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .auth-modal h2 {
-            color: #1de9b6;
-            margin-bottom: 25px;
-            font-size: 2em;
-        }
-        .auth-modal input, .auth-modal select {
-            margin-bottom: 15px;
-            border: 1px solid #1de9b6;
-        }
-        .auth-modal button {
-            width: 100%;
-            margin-top: 15px;
-        }
+        .auth-overlay.show .auth-modal { transform: translateY(0); opacity: 1; }
+        .auth-modal h2 { color: var(--primary-color); margin-bottom: 25px; font-size: 2em; }
+        .auth-modal input, .auth-modal select { margin-bottom: 15px; border: 1px solid var(--primary-color); }
+        .auth-modal button { width: 100%; margin-top: 15px; }
         .auth-modal .close-btn {
             position: absolute;
             top: 15px;
@@ -575,34 +724,14 @@
             padding: 0;
             margin: 0;
             transition: transform 0.2s ease;
-            box-shadow: none; /* Reset shadow from general button style */
-        }
-        .auth-modal .close-btn:hover {
-            transform: rotate(90deg);
-            background: none;
             box-shadow: none;
         }
-        #toggleAuthMode {
-            background: #5bb2e9;
-            color: white;
-            font-size: 0.9em;
-            margin-top: 10px;
-        }
-        #toggleAuthMode:hover {
-            background: #3a8ee0;
-        }
-        .profile-picture-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #1de9b6;
-            margin: 15px auto;
-            display: block;
-        }
+        .auth-modal .close-btn:hover { transform: rotate(90deg); background: none; box-shadow: none; }
+        #toggleAuthMode { background: #5bb2e9; color: white; font-size: 0.9em; margin-top: 10px; }
+        #toggleAuthMode:hover { background: #3a8ee0; }
 
 
-        /* --- Oyuncu Listeleme Modalı Stilleri --- */
+        /* --- Oyuncu Listeleme Modalı Stilleri (Mevcut) --- */
         .players-overlay {
             position: fixed;
             top: 0;
@@ -613,39 +742,29 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1002; /* Auth modal'dan daha yüksek */
+            z-index: 1002;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            transition: opacity var(--transition-speed), visibility var(--transition-speed);
         }
-        .players-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
+        .players-overlay.show { opacity: 1; visibility: visible; }
         .players-modal {
             background: #1f1f1f;
             border-radius: 12px;
             padding: 30px;
             width: 90%;
-            max-width: 900px; /* Daha geniş modal */
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            max-width: 900px;
+            box-shadow: var(--shadow-heavy);
             transform: translateY(-50px);
             opacity: 0;
             transition: transform 0.4s ease-out, opacity 0.4s ease-out;
             position: relative;
-            max-height: 80vh; /* Ekranın %80'i kadar yükseklik */
-            overflow-y: auto; /* İçerik taşarsa kaydırma çubuğu */
+            max-height: 80vh;
+            overflow-y: auto;
             box-sizing: border-box;
         }
-        .players-overlay.show .players-modal {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        .players-modal h2 {
-            color: #1de9b6;
-            margin-bottom: 25px;
-            font-size: 2em;
-        }
+        .players-overlay.show .players-modal { transform: translateY(0); opacity: 1; }
+        .players-modal h2 { color: var(--primary-color); margin-bottom: 25px; font-size: 2em; }
         .players-modal .close-btn {
             position: absolute;
             top: 15px;
@@ -661,13 +780,8 @@
             transition: transform 0.2s ease;
             box-shadow: none;
         }
-        .players-modal .close-btn:hover {
-            transform: rotate(90deg);
-            background: none;
-            box-shadow: none;
-        }
+        .players-modal .close-btn:hover { transform: rotate(90deg); background: none; box-shadow: none; }
 
-        /* Oyuncu Listeleme Modalı içindeki tablo stilleri */
         #playersTable {
             width: 100%;
             border-collapse: collapse;
@@ -676,157 +790,399 @@
             border-radius: 16px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.3);
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border-color);
         }
-
         #playersTable th, #playersTable td {
-            padding: 12px; /* Hücre iç boşlukları */
-            text-align: left; /* Metinleri sola hizala */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            vertical-align: middle; /* İçeriği dikey ortala */
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
         }
-
         #playersTable th {
-            background: #1de9b6;
-            color: black;
+            background: var(--primary-color);
+            color: var(--text-dark);
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        #playersTable tbody tr:last-child td { border-bottom: none; }
+        #playersTable tbody tr.player-row:hover { background-color: #2c3e50; cursor: pointer; }
 
-        #playersTable tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        #playersTable tbody tr.player-row:hover { /* Sadece oyuncu bilgisi satırlarının hoverı */
-            background-color: #2c3e50; /* Satır üzerine gelince renk değişimi */
-            cursor: pointer;
-        }
-
-        /* Oyuncu resmi için özel stil */
         #playersTable .player-table-img {
-            width: 40px; /* Küçük resim boyutu */
+            width: 40px;
             height: 40px;
-            border-radius: 50%; /* Yuvarlak */
-            object-fit: cover; /* Resmi hücreye sığdır */
-            border: 2px solid #1de9b6; /* Yeşil çerçeve */
-            display: block; /* Margin auto için */
-            margin: 0 auto; /* Resmi hücre içinde ortala */
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+            display: block;
+            margin: 0 auto;
         }
-
-        /* E-posta bilgisi için stil, başlangıçta gizli */
         .player-email-row td {
             background-color: rgba(60, 60, 60, 0.9);
             font-size: 0.85em;
-            color: #1de9b6;
-            text-align: center; /* Ortala */
+            color: var(--primary-color);
+            text-align: center;
             padding: 8px;
-            display: none; /* Başlangıçta gizli */
-            border-top: none; /* Üst çizgiyi kaldır */
+            display: none;
+            border-top: none;
         }
-
-        .player-email-row.show td {
-            display: table-cell; /* Gösterildiğinde görünür yap */
-        }
-
+        .player-email-row.show td { display: table-cell; }
         #noPlayersMessage {
             text-align: center;
             color: #9e9e9e;
             margin-top: 20px;
             font-size: 1.1em;
         }
+
+        /* Haber Detay Modalı (Yeni) */
+        .news-detail-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1003;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-speed), visibility var(--transition-speed);
+        }
+        .news-detail-overlay.show { opacity: 1; visibility: visible; }
+        .news-detail-modal {
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px; /* Daha geniş haber içeriği için */
+            box-shadow: var(--shadow-heavy);
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        .news-detail-overlay.show .news-detail-modal { transform: translateY(0); opacity: 1; }
+        .news-detail-modal h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-align: center;
+        }
+        .news-detail-modal p {
+            color: var(--text-light);
+            line-height: 1.6;
+            font-size: 1em;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .news-detail-modal .news-date {
+            font-size: 0.85em;
+            color: #9e9e9e;
+            display: block;
+            text-align: right;
+        }
+        .news-detail-modal .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            font-size: 1.8em;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+            margin: 0;
+            transition: transform 0.2s ease;
+            box-shadow: none;
+        }
+        .news-detail-modal .close-btn:hover { transform: rotate(90deg); background: none; box-shadow: none; }
+
+
+        /* Footer Stilleri */
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(15, 32, 39, 0.9);
+            color: var(--text-light);
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            border-top: 1px solid var(--border-color);
+        }
+        footer p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #aaa;
+        }
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed);
+        }
+        footer a:hover {
+            color: var(--secondary-color);
+        }
+
+
+        /* Responsive Ayarlamalar */
+        @media (max-width: 992px) {
+            h1 { font-size: 3.5em; }
+            h2 { font-size: 2em; }
+            h3 { font-size: 1.6em; }
+            nav ul { gap: 15px; }
+            .hero-section { padding: 60px 20px; }
+            .hero-section h1 { font-size: 3.5em; }
+            .hero-section p { font-size: 1.2em; }
+            .hero-button { padding: 12px 25px; font-size: 1.1em; }
+            .news-section .news-list { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-wrap: wrap; /* Mobil görünümde elemanların alt satıra geçmesini sağlar */
+                justify-content: space-between;
+                padding: 10px;
+            }
+            .logo { font-size: 1.5em; }
+            nav ul { display: none; } /* Navigasyonu gizle, hamburger menü gösterilecek */
+            .hamburger-menu { display: flex; }
+            .header-right { gap: 10px; }
+            .auth-status-bar, #loginButton {
+                font-size: 0.8em;
+                padding: 5px 10px;
+            }
+            .admin-panel-toggle-container { margin-left: auto; margin-right: 0; } /* Sağ tarafa yapıştır */
+
+
+            #app-container { padding-top: 80px; }
+            h1 { font-size: 2.8em; }
+            h2 { font-size: 1.8em; }
+            h3 { font-size: 1.4em; }
+            th, td { padding: 8px; font-size: 14px; }
+            .section-card { padding: 15px; margin: 15px auto; }
+            input, select, button, textarea { padding: 10px; font-size: 14px; }
+            .flex-row { flex-direction: column; gap: 5px; }
+            .flex-row > select, .flex-row > input { width: 100%; }
+            .news-item h4 { font-size: 1.1em; }
+            .news-item p { font-size: 0.85em; -webkit-line-clamp: 5; } /* Mobil için satır sayısını artır */
+            .hero-section { padding: 40px 15px; }
+            .hero-section h1 { font-size: 2.5em; }
+            .hero-section p { font-size: 1em; }
+            .hero-button { padding: 10px 20px; font-size: 1em; }
+            .news-section .news-list { grid-template-columns: 1fr; } /* Tek sütun */
+            .players-modal, .news-detail-modal { padding: 20px; } /* Mobil modal dolgusu */
+            #playersTable th, #playersTable td { padding: 10px; font-size: 13px; }
+            .player-table-img { width: 30px; height: 30px; }
+            .image-preview { width: 80px; height: 80px; }
+            .image-preview.small { width: 60px; height: 60px; }
+        }
+        @media (max-width: 480px) {
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            .hero-section h1 { font-size: 2em; }
+            .auth-status-bar span { display: none; } /* Küçük ekranlarda kullanıcı adını gizle */
+            .profile-status-img { width: 25px; height: 25px; }
+            .auth-status-bar button, #loginButton { padding: 4px 8px; }
+            .admin-panel-toggle-container { margin-right: 0; }
+            .auth-modal { padding: 20px; }
+            .auth-modal h2 { font-size: 1.8em; }
+            input, select, button, textarea { font-size: 13px; padding: 8px; }
+            .custom-alert-modal { padding: 20px; font-size: 0.9em; }
+            .custom-alert-header { font-size: 24px; }
+            .custom-alert-body { font-size: 16px; }
+        }
     </style>
 </head>
 <body>
 
-    <button id="loginButton">Giriş Yap / Kayıt Ol</button>
-    <div id="authStatusBar" class="auth-status-bar hidden">
-        <img id="profileStatusImg" class="profile-status-img" src="default-avatar.png" alt="Profil Fotoğrafı">
-        <span id="authStatusText"></span>
-        <button id="logoutButton">Çıkış Yap</button>
-    </div>
-
-    <div class="admin-panel-toggle-container hidden">
-        <button id="adminPanelToggleBtn">Admin Panelini Aç</button>
-    </div>
-
-    <h1>Sakarya YeşilTepe Futbol Turnuvası <span style="font-size:0.8em; vertical-align:middle;">⚽🏆</span></h1>
-
-    <div class="section-card">
-        <h2>Takım Sıralaması</h2>
-        <div class="table-container">
-            <table id="rankingTable">
-                <thead>
-                    <tr>
-                        <th>Sıralama</th>
-                        <th>Takım Adı</th>
-                        <th>Galibiyet</th>
-                        <th>Mağlubiyet</th>
-                        <th>Puan</th>
-                    </tr>
-                </thead>
-                <tbody id="rankingBody"></tbody>
-            </table>
+    <header>
+        <a href="#home" class="logo">
+            <i class="fas fa-futbol"></i> YeşilTepe FC
+        </a>
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#home" class="nav-link active">Ana Sayfa</a></li>
+                <li><a href="#teams" class="nav-link">Takımlar</a></li>
+                <li><a href="#matches" class="nav-link">Maçlar</a></li>
+                <li><a href="#news" class="nav-link">Haberler</a></li>
+                <li><a href="#stats" class="nav-link">İstatistikler</a></li>
+            </ul>
+        </nav>
+        <div class="header-right">
+            <button id="loginButton" class="hidden"><i class="fas fa-sign-in-alt"></i> Giriş Yap / Kayıt Ol</button>
+            <div id="authStatusBar" class="auth-status-bar hidden">
+                <img id="profileStatusImg" class="profile-status-img" src="default-avatar.png" alt="Profil Fotoğrafı">
+                <span id="authStatusText"></span>
+                <button id="logoutButton"><i class="fas fa-sign-out-alt"></i> Çıkış</button>
+            </div>
+            <div class="admin-panel-toggle-container hidden">
+                <button id="adminPanelToggleBtn"><i class="fas fa-user-shield"></i> Admin Panelini Aç</button>
+            </div>
+            <div class="hamburger-menu">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <div class="section-card">
-        <h2>Yaklaşan Maç</h2>
-        <div class="match-box" id="upcomingMatchBox">
-            <div style="font-size:22px; font-weight:bold; color:#ff9100; text-align:center;" id="upcomingMatchText">Henüz belirlenmedi</div>
-            <div style="font-size:16px; color:#ff9100; text-align:center; margin-top: 5px;" id="upcomingMatchTime">Tarih: - | Saat: -</div>
-            <div id="countdown"></div>
-        </div>
-    </div>
+    <main id="app-container">
+        <section id="home" class="hero-section">
+            <div class="hero-content">
+                <h1>YeşilTepe Futbol Turnuvası</h1>
+                <p>Mahallemizin en prestijli futbol şölenine hoş geldiniz! Takımların mücadele ettiği, yeteneklerin parladığı ve dostluğun kazandığı yer.</p>
+                <a href="#matches" class="hero-button"><i class="fas fa-calendar-alt"></i> Yaklaşan Maçlara Göz At</a>
+            </div>
+        </section>
 
-    <div class="section-card">
-        <h2>Geçmiş Maçlar</h2>
-        <div class="match-box">
-            <table id="pastMatchesTable">
-                <thead>
-                    <tr><th>Takım 1</th><th>Skor</th><th>Takım 2</th><th>Tür</th></tr>
-                </thead>
-                <tbody id="pastMatches"></tbody>
-            </table>
-        </div>
-    </div>
+        <section id="teams" class="section-card">
+            <h2><i class="fas fa-trophy"></i> Takım Sıralaması</h2>
+            <div class="table-container">
+                <table id="rankingTable">
+                    <thead>
+                        <tr>
+                            <th>Sıralama</th>
+                            <th>Takım Adı</th>
+                            <th>Galibiyet</th>
+                            <th>Mağlubiyet</th>
+                            <th>Puan</th>
+                            <th>Logo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rankingBody"></tbody>
+                </table>
+            </div>
+        </section>
 
-    <div class="admin-panel section-card initially-hidden-admin-panel" id="adminPanel">
-        <h3>Takım Ekle</h3>
-        <input type="text" id="teamName" placeholder="Takım Adı" />
-        <button id="addTeamBtn">Takımı Ekle</button>
+        <section id="matches" class="section-card">
+            <h2><i class="fas fa-futbol"></i> Maçlar</h2>
+            <h3>Yaklaşan Maç</h3>
+            <div class="match-box" id="upcomingMatchBox">
+                <div style="font-size:22px; font-weight:bold; color:var(--secondary-color); text-align:center;" id="upcomingMatchText">Henüz belirlenmedi</div>
+                <div style="font-size:16px; color:var(--secondary-color); text-align:center; margin-top: 5px;" id="upcomingMatchTime">Tarih: - | Saat: -</div>
+                <div id="countdown"></div>
+            </div>
 
-        <h3>Yeni Maç Belirle</h3>
-        <div class="flex-row">
-            <select id="teamA"></select>
-            <span style="font-weight: bold; color: #1de9b6;">VS</span>
-            <select id="teamB"></select>
-        </div>
-        <input type="date" id="matchDate" />
-        <input type="time" id="matchTimeInput" />
-        <button id="setUpcomingMatchBtn">Maçı Belirle</button>
+            <h3>Geçmiş Maçlar</h3>
+            <div class="table-container">
+                <table id="pastMatchesTable">
+                    <thead>
+                        <tr>
+                            <th>Takım 1</th>
+                            <th>Skor</th>
+                            <th>Takım 2</th>
+                            <th>Tür</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pastMatches"></tbody>
+                </table>
+            </div>
+        </section>
 
-        <h3>Skor Ekle</h3>
-        <select id="matchTypeSelect">
-            <option value="Lig">Lig Maçı (Puanlı)</option>
-            <option value="Hazırlık">Hazırlık Maçı (Puansız)</option>
-        </select>
-        <div class="flex-row">
-            <select id="team1"></select>
-            <input type="number" id="score1" placeholder="Skor" min="0"/>
-            <span style="font-weight: bold; color: #1de9b6;">-</span>
-            <input type="number" id="score2" placeholder="Skor" min="0"/>
-            <select id="team2"></select>
-        </div>
-        <button id="addPastMatchBtn">Skoru Ekle</button>
-    </div>
+        <section id="news" class="section-card news-section">
+            <h2><i class="fas fa-newspaper"></i> Son Haberler</h2>
+            <ul class="news-list" id="newsList">
+                <li id="noNewsMessage">Henüz haber bulunmamaktadır.</li>
+            </ul>
+        </section>
 
-    <div class="notification-settings section-card">
-        <h3>Bildirim Ayarları</h3>
-        <button id="toggleNotificationsBtn">Bildirimleri Aç</button>
-        <div id="notificationStatus" class="notification-status">Bildirim Durumu: Bilinmiyor</div>
-        <p style="font-size:12px; color:#ff9100; text-align:center; margin-top:10px;">Not: Bildirimler sadece site tarayıcıda açıkken gönderilecektir.</p>
-    </div>
+        <section id="stats" class="section-card">
+            <h2><i class="fas fa-chart-bar"></i> İstatistikler</h2>
+            <p>Bu bölümde, gol krallığı, asist krallığı ve diğer oyuncu/takım istatistikleri yer alacaktır. Çok yakında!</p>
+            <div class="stats-container" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+                <div class="stat-card section-card" style="flex: 1; min-width: 280px; max-width: 400px; margin: 0; padding: 20px; background: rgba(45, 45, 45, 0.7); border: 1px solid rgba(29, 233, 182, 0.2);">
+                    <h4><i class="fas fa-users"></i> Oyuncu İstatistikleri</h4>
+                    <p>En golcüler, en çok asist yapanlar...</p>
+                </div>
+                <div class="stat-card section-card" style="flex: 1; min-width: 280px; max-width: 400px; margin: 0; padding: 20px; background: rgba(45, 45, 45, 0.7); border: 1px solid rgba(29, 233, 182, 0.2);">
+                    <h4><i class="fas fa-medal"></i> Rekorlar</h4>
+                    <p>En farklı galibiyet, en çok maç...</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="adminPanel" class="section-card initially-hidden-admin-panel">
+            <h2><i class="fas fa-cogs"></i> Admin Paneli</h2>
+
+            <div class="admin-section">
+                <h3>Takım Yönetimi</h3>
+                <input type="text" id="teamName" placeholder="Yeni Takım Adı" />
+                <input type="url" id="teamLogoUrl" placeholder="Takım Logosu URL'si (İsteğe Bağlı)" />
+                <img id="teamLogoPreview" class="image-preview small hidden" alt="Takım Logosu Önizleme" src="">
+                <button id="addTeamBtn"><i class="fas fa-plus"></i> Takımı Ekle</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>Maç Ayarları</h3>
+                <h4>Yeni Maç Belirle</h4>
+                <div class="flex-row">
+                    <select id="teamA"></select>
+                    <span style="font-weight: bold; color: var(--primary-color);">VS</span>
+                    <select id="teamB"></select>
+                </div>
+                <input type="date" id="matchDate" />
+                <input type="time" id="matchTimeInput" />
+                <button id="setUpcomingMatchBtn"><i class="fas fa-calendar-plus"></i> Yaklaşan Maçı Belirle</button>
+
+                <h4>Skor Ekle</h4>
+                <select id="matchTypeSelect">
+                    <option value="Lig">Lig Maçı (Puanlı)</option>
+                    <option value="Hazırlık">Hazırlık Maçı (Puansız)</option>
+                </select>
+                <div class="flex-row">
+                    <select id="team1"></select>
+                    <input type="number" id="score1" placeholder="Skor" min="0"/>
+                    <span style="font-weight: bold; color: var(--primary-color);">-</span>
+                    <input type="number" id="score2" placeholder="Skor" min="0"/>
+                    <select id="team2"></select>
+                </div>
+                <button id="addPastMatchBtn"><i class="fas fa-plus-square"></i> Skoru Ekle</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>Haber Yönetimi</h3>
+                <input type="text" id="newsTitle" placeholder="Haber Başlığı" />
+                <textarea id="newsContent" placeholder="Haber İçeriği" rows="6"></textarea>
+                <button id="addNewsBtn"><i class="fas fa-bullhorn"></i> Haberi Paylaş</button>
+            </div>
+
+            <div class="admin-section">
+                <h3>Kullanıcı Yönetimi</h3>
+                <p style="font-size: 0.9em; color: #ccc;">Burada kayıtlı kullanıcıları görebilir ve yönetebilirsiniz.</p>
+                <button id="viewUsersBtn"><i class="fas fa-users-cog"></i> Kayıtlı Kullanıcıları Görüntüle</button>
+                <div id="usersListContainer" class="table-container hidden" style="margin-top: 20px;">
+                    <table id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Fotoğraf</th>
+                                <th>Ad Soyad</th>
+                                <th>E-posta</th>
+                                <th>Takım</th>
+                                <th>Mevki</th>
+                                <th>Yaş</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <tr><td colspan="7" style="text-align: center; color: #9e9e9e;">Kullanıcılar yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 YeşilTepe Futbol Turnuvası. Tüm Hakları Saklıdır.</p>
+        <p>Bize Ulaşın: <a href="mailto:info@yesiltepefutbol.com">info@yesiltepefutbol.com</a></p>
+    </footer>
+
 
     <div class="custom-alert-overlay">
         <div class="custom-alert-modal">
@@ -847,16 +1203,15 @@
             <div id="registerForm" class="hidden">
                 <input type="text" id="registerName" placeholder="Adınız" />
                 <input type="text" id="registerSurname" placeholder="Soyadınız" />
-                <input type="number" id="registerAge" placeholder="Yaşınız" min="10" max="99" />
+                <input type="number" id="registerAge" placeholder="Yaşınız" min="6" max="99" />
                 <select id="registerTeam">
                     <option value="">Takım Seçin</option>
-                    </select>
+                </select>
                 <select id="registerPosition">
                     <option value="">Mevki Seçin</option>
-                    </select>
-                <label for="profilePictureUpload" class="custom-file-upload">Profil Fotoğrafı Seç (İsteğe Bağlı)</label>
-                <input type="file" id="profilePictureUpload" accept="image/*" />
-                <img id="profilePicturePreview" class="profile-picture-preview hidden" alt="Profil Fotoğrafı Önizleme" src="" />
+                </select>
+                <input type="url" id="profilePictureUrl" placeholder="Profil Fotoğrafı URL'si (İsteğe Bağlı)" />
+                <img id="profilePicturePreview" class="image-preview hidden" alt="Profil Fotoğrafı Önizleme" src="" />
 
                 <input type="email" id="registerEmail" placeholder="E-posta" />
                 <input type="password" id="registerPassword" placeholder="Şifre (Min 6 Karakter)" />
@@ -871,20 +1226,31 @@
         <div class="players-modal">
             <button class="close-btn" id="closePlayersModal">&times;</button>
             <h2 id="playersModalTitle">Takım Oyuncuları</h2>
-            <div class="table-container"> <table id="playersTable">
+            <div class="table-container">
+                <table id="playersTable">
                     <thead>
                         <tr>
-                            <th></th> <th>İsim</th>
+                            <th></th>
+                            <th>İsim</th>
                             <th>Soyisim</th>
                             <th>Mevki</th>
                             <th>Yaş</th>
                         </tr>
                     </thead>
                     <tbody id="playersTableBody">
-                        </tbody>
+                    </tbody>
                 </table>
                 <p id="noPlayersMessage" style="text-align: center; color: #9e9e9e; margin-top: 20px;" class="hidden">Bu takımda henüz oyuncu bulunmamaktadır.</p>
             </div>
+        </div>
+    </div>
+
+    <div class="news-detail-overlay">
+        <div class="news-detail-modal">
+            <button class="close-btn" id="closeNewsDetailModal">&times;</button>
+            <h2 id="newsDetailTitle"></h2>
+            <p id="newsDetailContent"></p>
+            <span id="newsDetailDate" class="news-date"></span>
         </div>
     </div>
 
@@ -892,13 +1258,12 @@
     <script type="module">
         // Firebase Modüllerini Doğru Yollardan Import Edin
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-        import { getDatabase, ref, set, onValue, update, push, runTransaction } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+        import { getDatabase, ref, set, onValue, update, push, runTransaction, remove } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
-
+        // import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js"; // Storage artık kullanılmıyor
 
         // Firebase yapılandırma - KENDİ BİLGİLERİNİZLE DEĞİŞTİRİN
-    const firebaseConfig = {
+        const firebaseConfig = {
             apiKey: "AIzaSyC_4leEyiGLUg4pF420WtQOC2om-OyWoEU",
             authDomain: "futbol-1e4a5.firebaseapp.com",
             databaseURL: "https://futbol-1e4a5-default-rtdb.firebaseio.com",
@@ -913,7 +1278,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const auth = getAuth(app);
-        const storage = getStorage(app);
+        // const storage = getStorage(app); // Storage artık kullanılmıyor
 
         // DOM referansları
         const rankingBody = document.getElementById("rankingBody");
@@ -925,10 +1290,14 @@
         const adminPanel = document.getElementById("adminPanel");
         const adminPanelToggleContainer = document.querySelector('.admin-panel-toggle-container');
         const adminPanelToggleBtn = document.getElementById('adminPanelToggleBtn');
-
+        const viewUsersBtn = document.getElementById('viewUsersBtn');
+        const usersListContainer = document.getElementById('usersListContainer');
+        const usersTableBody = document.getElementById('usersTableBody');
 
         // Admin Panel Form elemanları
         const teamNameInput = document.getElementById("teamName");
+        const teamLogoUrlInput = document.getElementById("teamLogoUrl"); // DEĞİŞTİ
+        const teamLogoPreview = document.getElementById("teamLogoPreview");
         const addTeamBtn = document.getElementById("addTeamBtn");
 
         const teamASelect = document.getElementById("teamA");
@@ -944,9 +1313,22 @@
         const matchTypeSelect = document.getElementById("matchTypeSelect");
         const addPastMatchBtn = document.getElementById("addPastMatchBtn");
 
-        // Bildirim Elemanları
-        const toggleNotificationsBtn = document.getElementById("toggleNotificationsBtn");
-        const notificationStatus = document.getElementById("notificationStatus");
+        // Haber Elemanları
+        const newsSection = document.getElementById("news");
+        const newsList = document.getElementById("newsList");
+        const noNewsMessage = document.getElementById("noNewsMessage");
+        const newsTitleInput = document.getElementById("newsTitle");
+        const newsContentInput = document.getElementById("newsContent");
+        const addNewsBtn = document.getElementById("addNewsBtn");
+
+        // Haber Detay Modalı
+        const newsDetailOverlay = document.querySelector('.news-detail-overlay');
+        const newsDetailModal = document.querySelector('.news-detail-modal');
+        const closeNewsDetailModal = document.getElementById('closeNewsDetailModal');
+        const newsDetailTitle = document.getElementById('newsDetailTitle');
+        const newsDetailContent = document.getElementById('newsDetailContent');
+        const newsDetailDate = document.getElementById('newsDetailDate');
+
 
         // Giriş/Kayıt Modal Elemanları
         const loginButton = document.getElementById("loginButton");
@@ -962,11 +1344,11 @@
         const loginUserBtn = document.getElementById("loginUserBtn");
 
         const registerNameInput = document.getElementById("registerName");
-        const registerSurnameInput = document.getElementById("registerSurname"); // Düzeltildi
+        const registerSurnameInput = document.getElementById("registerSurname");
         const registerAgeInput = document.getElementById("registerAge");
         const registerTeamSelect = document.getElementById("registerTeam");
         const registerPositionSelect = document.getElementById("registerPosition");
-        const profilePictureUpload = document.getElementById("profilePictureUpload");
+        const profilePictureUrlInput = document.getElementById("profilePictureUrl"); // DEĞİŞTİ
         const profilePicturePreview = document.getElementById("profilePicturePreview");
         const registerEmailInput = document.getElementById("registerEmail");
         const registerPasswordInput = document.getElementById("registerPassword");
@@ -982,17 +1364,24 @@
         const playersOverlay = document.querySelector(".players-overlay");
         const closePlayersModal = document.getElementById("closePlayersModal");
         const playersModalTitle = document.getElementById("playersModalTitle");
-        const playersTableBody = document.getElementById("playersTableBody"); // Güncellenen referans
+        // const playersTableBody = document.getElementById("playersTableBody"); // Zaten yukarıda tanımlı
         const noPlayersMessage = document.getElementById("noPlayersMessage");
 
-        // Varsayılan Avatar URL'si
-        const DEFAULT_AVATAR_URL = 'https://i.imageupload.app/88899fc6eb188999f579.png';
+        // Navigasyon ve Hamburger Menü
+        const navLinks = document.querySelectorAll('.nav-link');
+        const hamburgerMenu = document.querySelector('.hamburger-menu');
+        const navMenu = document.querySelector('.nav-menu ul');
 
-        // Admin e-postası (burayı kendi admin e-postanızla değiştirin)
-        const ADMIN_EMAILS = ["admin@gmail.com", "admin2@example.com", "h.eskici0111@gmail.com"]; // Birden fazla admin e-postası
+        // Varsayılan Avatar ve Logo URL'leri
+        const DEFAULT_AVATAR_URL = 'https://i.imageupload.app/88899fc6eb188999f579.png'; // Oyuncu
+        const DEFAULT_TEAM_LOGO_URL = 'https://i.imageupload.app/H1M1x.png'; // Takım
+
+        // Admin e-postası (Sadece admin@gmail.com erişebilecek)
+        const ADMIN_EMAIL = "admin@gmail.com";
 
         let currentAuthMode = 'login';
-        let selectedFile = null;
+        // let selectedProfileFile = null; // Artık kullanılmıyor
+        // let selectedTeamLogoFile = null; // Artık kullanılmıyor
 
         // Mevki seçenekleri (Türkçe)
         const positions = [
@@ -1012,7 +1401,6 @@
         // Admin paneli başlangıçta gizli olsun
         adminPanel.classList.add('initially-hidden-admin-panel');
 
-
         // --- Custom Alert Fonksiyonu ---
         function showAlert(message, type = 'info', duration = 4000) {
             const overlay = document.querySelector('.custom-alert-overlay');
@@ -1027,12 +1415,13 @@
             header.classList.add(type);
 
             let titleText = '';
-            if (type === 'success') { titleText = 'Başarılı!'; }
-            else if (type === 'warning') { titleText = 'Uyarı!'; }
-            else if (type === 'error') { titleText = 'Hata!'; }
-            else { titleText = 'Bilgi'; }
+            let iconClass = '';
+            if (type === 'success') { titleText = 'Başarılı!'; iconClass = 'fas fa-check-circle'; }
+            else if (type === 'warning') { titleText = 'Uyarı!'; iconClass = 'fas fa-exclamation-triangle'; }
+            else if (type === 'error') { titleText = 'Hata!'; iconClass = 'fas fa-times-circle'; }
+            else { titleText = 'Bilgi'; iconClass = 'fas fa-info-circle'; }
 
-            header.textContent = titleText;
+            header.innerHTML = `<i class="${iconClass}"></i> ${titleText}`;
             body.textContent = message;
 
             overlay.classList.add('show');
@@ -1046,70 +1435,52 @@
             }, duration);
         }
 
-        // --- Bildirim Ayarları ---
-        function updateNotificationUI() {
-            if (!("Notification" in window)) {
-                toggleNotificationsBtn.textContent = "Bildirimler Desteklenmiyor";
-                notificationStatus.textContent = "Bildirim Durumu: Desteklenmiyor";
-                notificationStatus.style.color = '#ff4d4d';
-                toggleNotificationsBtn.disabled = true;
-                return;
-            }
+        // --- Navigasyon ve Hamburger Menü İşlevselliği ---
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Active sınıfını kaldır
+                navLinks.forEach(l => l.classList.remove('active'));
+                // Tıklanan linke active sınıfını ekle
+                this.classList.add('active');
 
-            if (Notification.permission === 'granted') {
-                toggleNotificationsBtn.textContent = "Bildirimleri Kapat (Tarayıcı ayarlarından)";
-                notificationStatus.textContent = "Bildirim Durumu: Açık";
-                notificationStatus.style.color = '#1de9b6';
-                toggleNotificationsBtn.disabled = true;
-            } else if (Notification.permission === 'denied') {
-                toggleNotificationsBtn.textContent = "Bildirimleri Aç (Engellendi)";
-                notificationStatus.textContent = "Bildirim Durumu: Engellendi (Tarayıcı ayarlarından izin verin)";
-                notificationStatus.style.color = '#ff4d4d';
-                toggleNotificationsBtn.disabled = true;
-            } else {
-                toggleNotificationsBtn.textContent = "Bildirimleri Aç";
-                notificationStatus.textContent = "Bildirim Durumu: Bilinmiyor";
-                notificationStatus.style.color = '#9e9e9e';
-                toggleNotificationsBtn.disabled = false;
-            }
-        }
+                // Hedef bölüme kaydır
+                const targetId = this.getAttribute('href').substring(1);
+                document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
 
-        toggleNotificationsBtn.addEventListener('click', async () => {
-            if (!("Notification" in window)) {
-                showAlert("Bu tarayıcı bildirimleri desteklemiyor.", 'error');
-                return;
-            }
-
-            if (Notification.permission === 'granted') {
-                showAlert("Bildirimler zaten açık. Kapatmak için tarayıcı ayarlarınızı kullanın.", 'info');
-            } else if (Notification.permission === 'denied') {
-                showAlert("Bildirim izni daha önce reddedildi. Lütfen tarayıcı ayarlarınızdan bu siteye bildirim izni verin.", 'warning');
-            }
-            else {
-                const permission = await Notification.requestPermission();
-                updateNotificationUI();
-                if (permission === 'granted') {
-                    showAlert("Bildirim izni verildi. Artık site açıkken bildirim alacaksınız.", 'success');
-                } else {
-                    showAlert("Bildirim izni reddedildi. Bildirim alamayacaksınız.", 'warning');
-                }
-            }
+                // Mobil menüyü kapat
+                hamburgerMenu.classList.remove('active');
+                navMenu.classList.remove('show');
+            });
         });
 
-        window.addEventListener('DOMContentLoaded', updateNotificationUI);
+        hamburgerMenu.addEventListener('click', () => {
+            hamburgerMenu.classList.toggle('active');
+            navMenu.classList.toggle('show');
+            navMenu.classList.toggle('mobile-active');
+        });
 
-        async function showTournamentNotification(title, body) {
-            if (Notification.permission === 'granted') {
-                const options = {
-                    body: body,
-                    icon: 'https://placehold.co/48x48/1de9b6/000?text=⚽',
-                    badge: 'https://placehold.co/48x48/1de9b6/000?text=🏆',
-                    tag: 'tournament-update',
-                    renotify: true
-                };
-                new Notification(title, options);
-            }
-        }
+        // Sayfa kaydırıldığında aktif menü öğesini belirle
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            let currentActive = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 150; // Header yüksekliği ve biraz daha boşluk
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentActive = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(currentActive)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
 
         // --- Takım Yönetimi ---
         let currentTeamsData = []; // Global olarak takım verilerini tutmak için
@@ -1133,11 +1504,12 @@
                     <td>${team.wins || 0}</td>
                     <td>${team.losses || 0}</td>
                     <td>${team.points || 0}</td>
+                    <td><img src="${team.logo || DEFAULT_TEAM_LOGO_URL}" alt="${team.name} Logo" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-color);"></td>
                 `;
                 rankingBody.appendChild(tr);
             });
             updateDropdowns(teams);
-            updateRegisterTeamSelect(teams); // Yeni eklenen kısım: Kayıt modalındaki takım seçicisini güncelle
+            updateRegisterTeamSelect(teams);
         }
 
         function updateDropdowns(teams) {
@@ -1165,7 +1537,6 @@
             });
         }
 
-        // Kayıt modalındaki takım seçicisini güncellemek için ayrı bir fonksiyon
         function updateRegisterTeamSelect(teams) {
             const currentVal = registerTeamSelect.value;
             registerTeamSelect.innerHTML = "";
@@ -1189,27 +1560,55 @@
             }
         }
 
-
         const teamsRef = ref(db, "teams");
-        onValue(teamsRef, renderTeams); // Realtime dinleyici
+        onValue(teamsRef, renderTeams);
+
+        // Takım logosu URL'den önizlemesi
+        teamLogoUrlInput.addEventListener('input', (event) => {
+            const url = event.target.value;
+            if (url) {
+                teamLogoPreview.src = url;
+                teamLogoPreview.classList.remove('hidden');
+                // URL'nin geçerli bir resim olup olmadığını kontrol etmek için yükleme hatası dinleyicisi
+                teamLogoPreview.onerror = () => {
+                    teamLogoPreview.src = DEFAULT_TEAM_LOGO_URL;
+                    showAlert("Geçersiz takım logosu URL'si. Varsayılan logo kullanılacak.", 'warning', 2000);
+                };
+            } else {
+                teamLogoPreview.src = '';
+                teamLogoPreview.classList.add('hidden');
+            }
+        });
 
         addTeamBtn.addEventListener("click", async () => {
             const name = teamNameInput.value.trim();
+            const logoUrl = teamLogoUrlInput.value.trim();
+
             if (!name) {
                 showAlert("Takım adı boş olamaz!", 'warning');
                 return;
             }
+            if (auth.currentUser.email !== ADMIN_EMAIL) { // Sadece admin@gmail.com kontrolü
+                showAlert("Bu işlemi yapmak için yönetici olmalısınız.", 'error');
+                return;
+            }
+
             const teamRef = ref(db, "teams/" + name);
             try {
-                // Takımın var olup olmadığını kontrol et
                 const snapshot = await new Promise(resolve => onValue(teamRef, resolve, { onlyOnce: true }));
                 if (snapshot.exists()) {
                     showAlert("Bu takım zaten mevcut!", 'warning');
                     return;
                 }
 
-                await set(teamRef, { name, wins: 0, losses: 0, points: 0 });
+                // URL boşsa veya geçersizse varsayılan logo kullan
+                const finalLogoUrl = (logoUrl && isValidUrl(logoUrl)) ? logoUrl : DEFAULT_TEAM_LOGO_URL;
+
+                await set(teamRef, { name, wins: 0, losses: 0, points: 0, logo: finalLogoUrl });
                 teamNameInput.value = "";
+                teamLogoUrlInput.value = "";
+                teamLogoPreview.src = "";
+                teamLogoPreview.classList.add('hidden');
                 showAlert(`${name} takımı başarıyla eklendi!`, 'success');
             } catch (error) {
                 console.error("Takım eklenirken hata oluştu:", error);
@@ -1217,11 +1616,22 @@
             }
         });
 
+        // URL geçerlilik kontrolü
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+
+
         // --- Yaklaşan Maç Yönetimi & Geri Sayım ---
         let countdownInterval;
 
         function updateCountdown(matchTimestamp) {
-            clearInterval(countdownInterval); // Önceki sayacı temizle
+            clearInterval(countdownInterval);
             if (!matchTimestamp || isNaN(matchTimestamp)) {
                 countdownDisplay.textContent = "";
                 return;
@@ -1277,13 +1687,18 @@
                 showAlert("Takımlar farklı olmalı!", 'error');
                 return;
             }
+            if (auth.currentUser.email !== ADMIN_EMAIL) { // Sadece admin@gmail.com kontrolü
+                showAlert("Bu işlemi yapmak için yönetici olmalısınız.", 'error');
+                return;
+            }
+
             try {
                 await set(upcomingMatchRef, { teamA, teamB, date, time });
                 showAlert("Yaklaşan maç başarıyla güncellendi!", 'success');
                 matchDateInput.value = "";
                 matchTimeInput.value = "";
-                showTournamentNotification("Yaklaşan Maç Belirlendi!", `${teamA} vs ${teamB} maçı ${date} tarihinde, ${time} saatinde oynanacak.`);
-            } catch (error) {
+            }
+            catch (error) {
                 console.error("Yaklaşan maç güncellenirken hata oluştu:", error);
                 showAlert("Yaklaşan maç güncellenirken bir hata oluştu.", 'error');
             }
@@ -1295,7 +1710,7 @@
             pastMatchesBody.innerHTML = "";
             const matches = [];
             snapshot.forEach(childSnap => {
-                matches.push(childSnap.val());
+                matches.push({ id: childSnap.key, ...childSnap.val() });
             });
 
             matches.reverse();
@@ -1331,6 +1746,10 @@
             }
             if (isNaN(score1) || isNaN(score2) || score1 < 0 || score2 < 0) {
                 showAlert("Geçerli skorlar girin (0 veya üzeri olmalı)!", 'warning');
+                return;
+            }
+            if (auth.currentUser.email !== ADMIN_EMAIL) { // Sadece admin@gmail.com kontrolü
+                showAlert("Bu işlemi yapmak için yönetici olmalısınız.", 'error');
                 return;
             }
 
@@ -1372,13 +1791,106 @@
                 team1Select.value = "";
                 team2Select.value = "";
 
-                showTournamentNotification("Yeni Skor Eklendi!", `${team1} ${score1} - ${score2} ${team2} maçı sonuçlandı.`);
-
             } catch (error) {
                 console.error("Skor eklenirken veya puanlar güncellenirken hata oluştu:", error);
                 showAlert("Skor eklenirken bir hata oluştu.", 'error');
             }
         });
+
+        // --- Haberler Yönetimi ---
+        const newsRef = ref(db, "news");
+
+        onValue(newsRef, (snapshot) => {
+            newsList.innerHTML = '';
+            const news = [];
+            snapshot.forEach(childSnap => {
+                news.push({ id: childSnap.key, ...childSnap.val() });
+            });
+
+            if (news.length === 0) {
+                noNewsMessage.classList.remove('hidden');
+                newsList.appendChild(noNewsMessage);
+            } else {
+                noNewsMessage.classList.add('hidden');
+                news.sort((a, b) => b.timestamp - a.timestamp);
+
+                news.forEach(item => {
+                    const li = document.createElement('li');
+                    li.classList.add('news-item');
+                    li.dataset.newsId = item.id; // Haber ID'sini data özelliğine ekle
+                    li.innerHTML = `
+                        <h4>${item.title}</h4>
+                        <p>${item.content}</p>
+                        <span class="news-date">${formatDate(item.timestamp)}</span>
+                    `;
+                    newsList.appendChild(li);
+
+                    // Haber öğesine tıklama olayı ekle (detay modalını açmak için)
+                    li.addEventListener('click', () => {
+                        newsDetailTitle.textContent = item.title;
+                        newsDetailContent.textContent = item.content;
+                        newsDetailDate.textContent = `Yayınlanma Tarihi: ${new Date(item.timestamp).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`;
+                        newsDetailOverlay.classList.add('show');
+                    });
+                });
+            }
+        });
+
+        closeNewsDetailModal.addEventListener('click', () => {
+            newsDetailOverlay.classList.remove('show');
+        });
+
+        addNewsBtn.addEventListener('click', async () => {
+            const title = newsTitleInput.value.trim();
+            const content = newsContentInput.value.trim();
+
+            if (!title || !content) {
+                showAlert("Haber başlığı ve içeriği boş olamaz!", 'warning');
+                return;
+            }
+            if (auth.currentUser.email !== ADMIN_EMAIL) { // Sadece admin@gmail.com kontrolü
+                showAlert("Bu işlemi yapmak için yönetici olmalısınız.", 'error');
+                return;
+            }
+
+            try {
+                await push(newsRef, {
+                    title: title,
+                    content: content,
+                    timestamp: Date.now(),
+                    author: auth.currentUser.email
+                });
+                showAlert("Haber başarıyla eklendi!", 'success');
+                newsTitleInput.value = '';
+                newsContentInput.value = '';
+            } catch (error) {
+                console.error("Haber eklenirken hata oluştu:", error);
+                showAlert("Haber eklenirken bir hata oluştu.", 'error');
+            }
+        });
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffSeconds = Math.floor((now - date) / 1000);
+            const diffMinutes = Math.floor(diffSeconds / 60);
+            const diffHours = Math.floor(diffMinutes / 60);
+            const diffDays = Math.floor(diffHours / 24);
+
+            if (diffSeconds < 60) {
+                return "Şimdi";
+            } else if (diffMinutes < 60) {
+                return `${diffMinutes} dakika önce`;
+            } else if (diffHours < 24) {
+                return `${diffHours} saat önce`;
+            } else if (diffDays < 7) {
+                return `${diffDays} gün önce`;
+            } else {
+                const options = { year: 'numeric', month: 'long', day: 'numeric' };
+                return date.toLocaleDateString('tr-TR', options);
+            }
+        }
+
 
         // --- Kullanıcı Giriş/Kayıt Fonksiyonları ---
 
@@ -1389,7 +1901,6 @@
             registerForm.classList.add('hidden');
             toggleAuthMode.textContent = "Hesabın mı yok? Kayıt Ol";
             currentAuthMode = 'login';
-            // Clear inputs
             loginEmailInput.value = '';
             loginPasswordInput.value = '';
             registerNameInput.value = '';
@@ -1397,11 +1908,9 @@
             registerAgeInput.value = '';
             registerTeamSelect.value = '';
             registerPositionSelect.value = '';
-            profilePictureUpload.value = ''; // File input'u temizle
+            profilePictureUrlInput.value = ''; // URL input temizlendi
             profilePicturePreview.src = '';
             profilePicturePreview.classList.add('hidden');
-            selectedFile = null; // selectedFile'ı sıfırla
-
             registerEmailInput.value = '';
             registerPasswordInput.value = '';
             registerConfirmPasswordInput.value = '';
@@ -1418,7 +1927,6 @@
                 registerForm.classList.remove('hidden');
                 toggleAuthMode.textContent = "Zaten hesabın var mı? Giriş Yap";
                 currentAuthMode = 'register';
-                // Kayıt formuna geçerken giriş formunu temizle
                 loginEmailInput.value = '';
                 loginPasswordInput.value = '';
             } else {
@@ -1427,39 +1935,38 @@
                 registerForm.classList.add('hidden');
                 toggleAuthMode.textContent = "Hesabın mı yok? Kayıt Ol";
                 currentAuthMode = 'login';
-                // Giriş formuna geçerken kayıt formunu temizle
                 registerNameInput.value = '';
                 registerSurnameInput.value = '';
                 registerAgeInput.value = '';
                 registerTeamSelect.value = '';
                 registerPositionSelect.value = '';
-                profilePictureUpload.value = '';
+                profilePictureUrlInput.value = ''; // URL input temizlendi
                 profilePicturePreview.src = '';
                 profilePicturePreview.classList.add('hidden');
-                selectedFile = null;
                 registerEmailInput.value = '';
                 registerPasswordInput.value = '';
                 registerConfirmPasswordInput.value = '';
             }
         });
 
-        // Profil fotoğrafı önizlemesi
-        profilePictureUpload.addEventListener('change', (event) => {
-            selectedFile = event.target.files[0];
-            if (selectedFile) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    profilePicturePreview.src = e.target.result;
-                    profilePicturePreview.classList.remove('hidden');
+        // Profil fotoğrafı URL'den önizlemesi
+        profilePictureUrlInput.addEventListener('input', (event) => {
+            const url = event.target.value;
+            if (url) {
+                profilePicturePreview.src = url;
+                profilePicturePreview.classList.remove('hidden');
+                // URL'nin geçerli bir resim olup olmadığını kontrol etmek için yükleme hatası dinleyicisi
+                profilePicturePreview.onerror = () => {
+                    profilePicturePreview.src = DEFAULT_AVATAR_URL;
+                    showAlert("Geçersiz profil fotoğrafı URL'si. Varsayılan avatar kullanılacak.", 'warning', 2000);
                 };
-                reader.readAsDataURL(selectedFile);
             } else {
                 profilePicturePreview.src = '';
                 profilePicturePreview.classList.add('hidden');
             }
         });
 
-     registerUserBtn.addEventListener('click', async () => {
+        registerUserBtn.addEventListener('click', async () => {
             const name = registerNameInput.value.trim();
             const surname = registerSurnameInput.value.trim();
             const age = parseInt(registerAgeInput.value);
@@ -1468,14 +1975,14 @@
             const email = registerEmailInput.value.trim();
             const password = registerPasswordInput.value;
             const confirmPassword = registerConfirmPasswordInput.value;
+            const profilePictureUrl = profilePictureUrlInput.value.trim();
 
-            // İlk olarak tüm temel alanların doldurulduğundan emin olalım
-            if (!name || !surname || isNaN(age) || !team || !position || !email || !password || !confirmPassword) {
-                showAlert("Lütfen tüm zorunlu alanları doldurun (yaş, takım, mevki, e-posta, şifre).", 'warning');
+            if (!name || !surname || isNaN(age) || !team || !position || !email || !!password || !confirmPassword) {
+                showAlert("Lütfen tüm zorunlu alanları doldurun (Ad, Soyad, Yaş, Takım, Mevki, E-posta, Şifre).", 'warning');
                 return;
             }
-            if (age < 6 || age > 20) {
-                 showAlert("Geçerli bir yaş girin (6-20 arası).", 'warning');
+            if (age < 6 || age > 99) {
+                 showAlert("Geçerli bir yaş girin (6-99 arası).", 'warning');
                  return;
             }
             if (password.length < 6) {
@@ -1488,14 +1995,12 @@
             }
 
             try {
-                // Firebase Authentication ile kullanıcı oluştur
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // Profil resmi artık sabit bir URL olacak
-                const photoURL = "https://i.imageupload.app/88899fc6eb188999f579.png";
+                // URL boşsa veya geçersizse varsayılan avatar kullan
+                const finalPhotoURL = (profilePictureUrl && isValidUrl(profilePictureUrl)) ? profilePictureUrl : DEFAULT_AVATAR_URL;
 
-                // Kullanıcı bilgilerini Realtime Database'e kaydet (varsayılan resim URL'si ile)
                 await set(ref(db, 'users/' + user.uid), {
                     name: name,
                     surname: surname,
@@ -1503,12 +2008,13 @@
                     team: team,
                     position: position,
                     email: email,
-                    profilePicture: photoURL
+                    profilePicture: finalPhotoURL,
+                    role: 'player' // Varsayılan rol 'player'
                 });
 
                 showAlert("Kayıt başarılı! Giriş yapabilirsiniz.", 'success');
                 authOverlay.classList.remove('show');
-                toggleAuthMode.click(); // Giriş formuna geri dön
+                toggleAuthMode.click();
 
             } catch (authError) {
                 console.error("Kayıt veya kimlik doğrulama hatası:", authError);
@@ -1525,6 +2031,7 @@
                 showAlert(errorMessage, 'error');
             }
         });
+
         loginUserBtn.addEventListener('click', async () => {
             const email = loginEmailInput.value.trim();
             const password = loginPasswordInput.value;
@@ -1541,9 +2048,7 @@
             } catch (error) {
                 console.error("Giriş hatası:", error);
                 let errorMessage = "Giriş yaparken bir hata oluştu.";
-                // Firebase kimlik doğrulama hata kodları
                 if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
-                    // Firebase SDK'sının yeni versiyonlarında invalid-email ve wrong-password yerine daha genel invalid-credential kullanılabiliyor.
                     errorMessage = "Geçersiz e-posta veya şifre.";
                 } else if (error.code === 'auth/user-disabled') {
                     errorMessage = "Hesabınız devre dışı bırakılmıştır.";
@@ -1570,29 +2075,30 @@
                 loginButton.classList.add('hidden');
                 authStatusBar.classList.remove('hidden');
                 authStatusBar.classList.add('logged-in');
-                profileStatusImg.classList.remove('hidden'); // Giriş yapıldığında resmi göster
+                profileStatusImg.classList.remove('hidden');
 
                 const userRef = ref(db, 'users/' + user.uid);
-                // `onValue` dinleyicisi, veritabanındaki değişiklikleri gerçek zamanlı olarak takip etmeli.
-                // `onlyOnce: true` burada kullanılmamalı.
                 onValue(userRef, (snapshot) => {
                     const userData = snapshot.val();
                     if (userData) {
-                        authStatusText.textContent = `Merhaba, ${userData.name || user.email}!`; // Eğer isim yoksa e-posta göster
+                        authStatusText.textContent = `Merhaba, ${userData.name || user.email}!`;
                         profileStatusImg.src = userData.profilePicture || DEFAULT_AVATAR_URL;
+                        // Admin butonu görünürlüğü
+                        if (user.email === ADMIN_EMAIL) { // Sadece tek admin kontrolü
+                            adminPanelToggleContainer.classList.remove('hidden');
+                        } else {
+                            adminPanelToggleContainer.classList.add('hidden');
+                            adminPanel.classList.add('initially-hidden-admin-panel');
+                            adminPanelToggleBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin Panelini Aç';
+                        }
                     } else {
-                        // Kullanıcının Firebase Auth'ta kaydı var ama Realtime DB'de verisi yoksa
+                        // Eğer kullanıcının DB'de verisi yoksa (e.g. sadece Auth ile kayıtlı ama DB'ye yazılmamış)
                         authStatusText.textContent = `Merhaba, ${user.email}!`;
                         profileStatusImg.src = DEFAULT_AVATAR_URL;
+                        adminPanelToggleContainer.classList.add('hidden');
+                        adminPanel.classList.add('initially-hidden-admin-panel');
+                        adminPanelToggleBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin Panelini Aç';
                     }
-
-                    if (ADMIN_EMAILS.includes(user.email)) { // user.email'in ADMIN_EMAILS dizisinde olup olmadığını kontrol et
-    adminPanelToggleContainer.classList.remove('hidden'); // Admin butonu görünür olsun
-} else {
-    adminPanelToggleContainer.classList.add('hidden'); // Admin değilse gizle
-    adminPanel.classList.add('initially-hidden-admin-panel'); // Paneli gizle
-    adminPanelToggleBtn.textContent = 'Admin Panelini Aç'; // Buton metnini sıfırla
-}
                 });
 
             } else {
@@ -1600,22 +2106,26 @@
                 authStatusBar.classList.add('hidden');
                 authStatusBar.classList.remove('logged-in');
                 profileStatusImg.classList.add('hidden');
-                profileStatusImg.src = ''; // Çıkış yapıldığında resmi temizle
+                profileStatusImg.src = '';
 
-                adminPanelToggleContainer.classList.add('hidden'); // Admin butonu gizle
-                adminPanel.classList.add('initially-hidden-admin-panel'); // Paneli gizle
-                adminPanelToggleBtn.textContent = 'Admin Panelini Aç'; // Buton metnini sıfırla
+                adminPanelToggleContainer.classList.add('hidden');
+                adminPanel.classList.add('initially-hidden-admin-panel');
+                adminPanelToggleBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin Panelini Aç';
             }
         });
 
         // Admin Panelini Aç/Kapat Butonu
         adminPanelToggleBtn.addEventListener('click', () => {
-            if (adminPanel.classList.contains('initially-hidden-admin-panel')) {
-                adminPanel.classList.remove('initially-hidden-admin-panel');
-                adminPanelToggleBtn.textContent = 'Admin Panelini Kapat';
+            if (auth.currentUser && auth.currentUser.email === ADMIN_EMAIL) { // Son bir kez daha kontrol
+                if (adminPanel.classList.contains('initially-hidden-admin-panel')) {
+                    adminPanel.classList.remove('initially-hidden-admin-panel');
+                    adminPanelToggleBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin Panelini Kapat';
+                } else {
+                    adminPanel.classList.add('initially-hidden-admin-panel');
+                    adminPanelToggleBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin Panelini Aç';
+                }
             } else {
-                adminPanel.classList.add('initially-hidden-admin-panel');
-                adminPanelToggleBtn.textContent = 'Admin Panelini Aç';
+                showAlert("Bu işlemi yapmak için yönetici olmalısınız.", 'error');
             }
         });
 
@@ -1626,16 +2136,13 @@
             if (targetRow) {
                 const teamName = targetRow.dataset.teamName;
                 playersModalTitle.textContent = `${teamName} Takımı Oyuncuları`;
-                playersTableBody.innerHTML = ''; // Eski satırları temizle
+                playersTableBody.innerHTML = '';
                 noPlayersMessage.classList.add('hidden');
 
                 const usersRef = ref(db, 'users');
-                let players = [];
-
-                // onValue dinleyicisini bir kez çalışacak şekilde ayarla
                 onValue(usersRef, (snapshot) => {
-                    playersTableBody.innerHTML = ''; // Her seferinde içeriği temizle
-                    players = []; // Listeyi sıfırla
+                    playersTableBody.innerHTML = '';
+                    let players = [];
                     snapshot.forEach(childSnap => {
                         const userData = childSnap.val();
                         if (userData.team === teamName) {
@@ -1647,7 +2154,7 @@
                         players.forEach(userData => {
                             const tr = document.createElement('tr');
                             tr.classList.add('player-row');
-                            tr.dataset.playerEmail = userData.email; // E-posta bilgisini satıra ekle
+                            tr.dataset.playerEmail = userData.email;
                             tr.innerHTML = `
                                 <td><img src="${userData.profilePicture || DEFAULT_AVATAR_URL}" alt="${userData.name}" class="player-table-img"></td>
                                 <td>${userData.name || 'Bilinmiyor'}</td>
@@ -1657,14 +2164,11 @@
                             `;
                             playersTableBody.appendChild(tr);
 
-                            // E-posta bilgisi için ayrı bir satır (başlangıçta gizli)
                             const emailTr = document.createElement('tr');
-                            emailTr.classList.add('player-email-row'); // Başlangıçta gizli
-                            emailTr.innerHTML = `<td colspan="5">E-posta: <a href="mailto:${userData.email}" style="color: #ff9100; text-decoration: none;">${userData.email || 'Bilinmiyor'}</a></td>`;
+                            emailTr.classList.add('player-email-row');
+                            emailTr.innerHTML = `<td colspan="5">E-posta: <a href="mailto:${userData.email}" style="color: var(--secondary-color); text-decoration: none;">${userData.email || 'Bilinmiyor'}</a></td>`;
                             playersTableBody.appendChild(emailTr);
 
-
-                            // Satıra tıklandığında e-posta bilgisini göster/gizle
                             tr.addEventListener('click', () => {
                                 emailTr.classList.toggle('show');
                             });
@@ -1674,13 +2178,82 @@
                         noPlayersMessage.classList.remove('hidden');
                     }
                     playersOverlay.classList.add('show');
-                }, { onlyOnce: true }); // Sadece bir kez veri almasını sağlar
+                }, { once: true });
             }
         });
 
         closePlayersModal.addEventListener('click', () => {
             playersOverlay.classList.remove('show');
         });
+
+        // --- Kullanıcı Yönetimi (Admin Paneli) ---
+        viewUsersBtn.addEventListener('click', async () => {
+            if (auth.currentUser.email !== ADMIN_EMAIL) { // Sadece admin@gmail.com kontrolü
+                showAlert("Bu işlemi yapmak için yönetici olmalısınız.", 'error');
+                return;
+            }
+
+            if (usersListContainer.classList.contains('hidden')) {
+                usersListContainer.classList.remove('hidden');
+                viewUsersBtn.innerHTML = '<i class="fas fa-users-cog"></i> Kullanıcı Listesini Gizle';
+
+                const usersRef = ref(db, 'users');
+                onValue(usersRef, (snapshot) => {
+                    usersTableBody.innerHTML = '';
+                    if (snapshot.exists()) {
+                        snapshot.forEach(childSnap => {
+                            const user = { id: childSnap.key, ...childSnap.val() };
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td><img src="${user.profilePicture || DEFAULT_AVATAR_URL}" alt="${user.name}" class="player-table-img"></td>
+                                <td>${user.name || 'N/A'} ${user.surname || ''}</td>
+                                <td>${user.email || 'N/A'}</td>
+                                <td>${user.team || 'N/A'}</td>
+                                <td>${user.position || 'N/A'}</td>
+                                <td>${user.age || 'N/A'}</td>
+                                <td>
+                                    <button class="delete-user-btn" data-uid="${user.id}" style="background-color: #ff4d4d; padding: 5px 10px; border-radius: 5px; margin: 0;"><i class="fas fa-trash-alt"></i> Sil</button>
+                                </td>
+                            `;
+                            usersTableBody.appendChild(tr);
+                        });
+                        // Silme butonlarına olay dinleyici ekle
+                        document.querySelectorAll('.delete-user-btn').forEach(button => {
+                            button.addEventListener('click', async (e) => {
+                                const userIdToDelete = e.target.closest('button').dataset.uid;
+                                const userEmailToDelete = e.target.closest('tr').querySelector('td:nth-child(3)').textContent;
+
+                                // Admin kendini silemesin
+                                if (userEmailToDelete === auth.currentUser.email) {
+                                    showAlert("Kendi hesabınızı silemezsiniz!", 'error');
+                                    return;
+                                }
+
+                                if (confirm(`"${userEmailToDelete}" kullanıcısını silmek istediğinizden emin misiniz?`)) {
+                                    try {
+                                        // Realtime Database'den kullanıcının verilerini sil
+                                        await remove(ref(db, 'users/' + userIdToDelete));
+
+                                        // Kullanıcıyı Firebase Auth'tan silme işlemi için sunucu tarafı kod gereklidir.
+                                        // Bu basit örnekte sadece DB kaydını siliyoruz.
+                                        showAlert("Kullanıcı başarıyla silindi!", 'success');
+                                    } catch (error) {
+                                        console.error("Kullanıcı silinirken hata oluştu:", error);
+                                        showAlert("Kullanıcı silinirken bir hata oluştu.", 'error');
+                                    }
+                                }
+                            });
+                        });
+                    } else {
+                        usersTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #9e9e9e;">Henüz kayıtlı kullanıcı bulunmamaktadır.</td></tr>';
+                    }
+                }, { once: true }); // Her açıldığında güncel veriyi bir kez çek
+            } else {
+                usersListContainer.classList.add('hidden');
+                viewUsersBtn.innerHTML = '<i class="fas fa-users-cog"></i> Kayıtlı Kullanıcıları Görüntüle';
+            }
+        });
+
 
     </script>
 </body>
