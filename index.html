@@ -6,8 +6,11 @@
     <title>YeşilTepe Futbol Turnuvası</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Genel Stil Ayarları */
         body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            /* Dinamik arka plan ve üzerine hafif gradyan */
+            background: url('https://images.unsplash.com/photo-1543888362-e64e9a6e3b5e?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+            background-size: cover;
             color: white;
             font-family: 'Montserrat', sans-serif;
             padding: 20px;
@@ -17,103 +20,159 @@
             align-items: center;
             min-height: 100vh;
             box-sizing: border-box;
+            position: relative;
+            overflow-x: hidden; /* Yatay kaydırmayı engeller */
         }
+
+        body::before { /* Arka plan üzerine okunurluk için overlay */
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(15, 32, 39, 0.8), rgba(32, 58, 67, 0.8), rgba(44, 83, 100, 0.8));
+            z-index: -1;
+        }
+
+        /* Başlıklar */
         h1, h2, h3 {
             text-align: center;
-            color: #1de9b6;
+            color: #1de9b6; /* Neon yeşil */
+            text-shadow: 0 0 10px rgba(29, 233, 182, 0.5), 0 0 20px rgba(29, 233, 182, 0.3);
             margin-bottom: 20px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
+
+        h1 { font-size: 3em; }
+        h2 { font-size: 2em; }
+        h3 { font-size: 1.5em; }
+
+        /* Bölüm Kartları */
+        .section-card {
+            background: rgba(31, 31, 31, 0.9); /* Hafif şeffaf arka plan */
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 800px;
+            width: 100%; /* Max genişliğe kadar tam genişlik */
+            backdrop-filter: blur(5px); /* Buzlu cam efekti */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            box-sizing: border-box;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Tablo Konteyneri */
         .table-container {
             overflow-x: auto; /* Küçük ekranlarda tabloyu kaydırılabilir yapar */
             width: 100%;
-            max-width: 800px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
         }
+
+        /* Tablolar */
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background: #1f1f1f;
+            background: rgba(31, 31, 31, 0.7); /* Tablo da hafif şeffaf */
             border-radius: 16px;
             box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-            overflow: hidden; /* Köşelerin yuvarlak kalmasını sağlar */
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         th, td {
             padding: 14px;
             text-align: center;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Hafif çizgi */
+            vertical-align: middle; /* Resimlerin dikey ortalanması */
         }
         th {
             background: #1de9b6;
             color: black;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         tr:last-child td {
             border-bottom: none; /* Son satırın alt çizgisini kaldırır */
         }
-        tr:hover {
+        tr.team-row:hover, tr.player-row:hover { /* Takım sıralaması satırları üzerine gelince */
             background-color: #2c3e50;
+            cursor: pointer;
         }
-        .admin-panel, .keypad, .match-box, .notification-settings {
-            background: #1f1f1f;
-            padding: 20px;
-            max-width: 600px;
-            margin: 20px auto;
-            border-radius: 16px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
-            width: 100%; /* Make panels take full width up to max-width */
-            box-sizing: border-box;
+        tr.player-detail-row td {
+            background-color: rgba(60, 60, 60, 0.9); /* Detay satırı arka planı */
+            font-size: 0.9em;
+            color: #1de9b6;
+            text-align: left;
+            padding-left: 30px;
         }
+
+        /* Input, Select, Button Genel Stilleri */
         input, select, button {
             width: 100%;
-            padding: 12px; /* Slightly larger padding */
+            padding: 12px;
             margin: 8px 0;
             border: none;
             border-radius: 8px;
             font-size: 16px;
             outline: none;
             box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+        input[type="file"] {
+            padding: 8px; /* File input için daha küçük padding */
         }
         input, select {
             background: #333;
             color: white;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            border: 1px solid #1de9b6; /* Tutarlı çerçeve rengi */
         }
         input:focus, select:focus {
-            border-color: #1de9b6;
-            box-shadow: 0 0 8px rgba(29, 233, 182, 0.5);
+            border-color: #ff9100; /* Odaklandığında turuncu */
+            box-shadow: 0 0 12px rgba(255, 145, 0, 0.5);
+            transform: scale(1.01);
         }
+
         button {
             background: #1de9b6;
             color: black;
             font-weight: bold;
             cursor: pointer;
             user-select: none;
-            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 15px rgba(29, 233, 182, 0.4);
         }
         button:hover {
-            background: #ff9100;
+            background: #ff9100; /* Hover'da turuncu vurgu */
             color: black;
-            transform: translateY(-2px);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 6px 20px rgba(255, 145, 0, 0.6);
         }
         button:active {
-            transform: translateY(0);
+            transform: translateY(0) scale(0.98);
+            box-shadow: 0 2px 10px rgba(255, 145, 0, 0.4);
         }
-        .keypad-buttons {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
+
+        /* Görünürlük Yardımcı Sınıfı */
         .hidden {
             display: none !important;
         }
+
+        /* Maç Etiketleri */
         .match-tag {
             padding: 4px 10px;
             border-radius: 12px;
             font-weight: bold;
             font-size: 12px;
-            display: inline-block; /* Ensure tags don't break layout */
+            display: inline-block;
+            white-space: nowrap; /* Etiketlerin tek satırda kalmasını sağlar */
         }
         .tag-league {
             background-color: rgba(29, 233, 182, 0.2);
@@ -125,6 +184,8 @@
             color: #9e9e9e;
             border: 1px solid #9e9e9e;
         }
+
+        /* Esnek Sıra Düzenleri */
         .flex-row {
             display: flex;
             gap: 10px;
@@ -132,30 +193,177 @@
             align-items: center;
         }
         .flex-row > select, .flex-row > input {
-            flex: 1;
+            flex: 1; /* Esnek öğeleri eşit genişliğe yayar */
         }
+        .flex-row span {
+            font-weight: bold;
+            color: #1de9b6; /* "vs" ve "-" yazıları */
+        }
+
+        /* Bildirim Ayarları Durum Metni */
         .notification-status {
             margin-top: 10px;
             text-align: center;
             font-weight: bold;
             color: #9e9e9e;
         }
-        /* Responsive adjustments */
+
+        /* Yaklaşan Maç Kutusu */
+        #upcomingMatchBox {
+            border: 2px solid #ff9100; /* Turuncu çerçeve */
+            padding: 25px;
+            background: rgba(255, 145, 0, 0.1); /* Hafif turuncu arka plan */
+            animation: pulseOrange 2s infinite alternate; /* Hafif turuncu nabız efekti */
+            border-radius: 16px; /* Köşeleri yuvarlak */
+        }
+        #countdown {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #1de9b6;
+            text-align: center;
+            margin-top: 15px;
+            text-shadow: 0 0 8px rgba(29, 233, 182, 0.5);
+        }
+
+        /* Animasyonlar */
+        @keyframes pulseOrange {
+            from { border-color: #ff9100; box-shadow: 0 0 15px rgba(255, 145, 0, 0.4); }
+            to { border-color: rgba(255, 145, 0, 0.5); box-shadow: 0 0 25px rgba(255, 145, 0, 0.8); }
+        }
+
+        /* --- Auth/Login/Profile Bar Stilleri --- */
+        .auth-status-bar {
+            position: fixed; /* Fixed olarak ayarlandı */
+            top: 20px; /* Sağ üst köşe */
+            right: 20px; /* Sağ üst köşe */
+            padding: 10px 15px;
+            background: rgba(31, 31, 31, 0.9);
+            border-radius: 12px; /* Köşeler yuvarlak */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex; /* İçeriklerini yatayda sıralar */
+            align-items: center; /* Dikeyde ortalar */
+            gap: 10px; /* Elemanlar arası boşluk */
+            z-index: 60; /* En üstte */
+            transition: all 0.3s ease; /* Yumuşak geçiş */
+            color: white; /* Metin rengi */
+            font-size: 1em;
+            white-space: nowrap; /* İçeriğin tek satırda kalmasını sağlar */
+        }
+        .auth-status-bar.logged-in {
+            background: rgba(29, 233, 182, 0.8);
+            color: black;
+            font-weight: bold;
+        }
+        .auth-status-bar button {
+            background: #ff4d4d;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            box-shadow: none; /* Genel button shadow'ını sıfırla */
+            width: auto; /* Otomatik genişlik */
+            margin: 0; /* Margin sıfırla */
+        }
+        .auth-status-bar button:hover {
+            background: #cc0000;
+        }
+        .profile-status-img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #000; /* Statüs barın rengine uyum */
+        }
+
+        #loginButton {
+            position: fixed; /* Fixed olarak ayarlandı */
+            top: 20px; /* Sağ üst köşe */
+            right: 20px; /* Sağ üst köşe */
+            background: #ff9100;
+            color: black;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 10px;
+            z-index: 60; /* En üstte */
+            box-shadow: 0 4px 15px rgba(255, 145, 0, 0.4);
+            width: auto;
+            margin: 0;
+            transition: all 0.3s ease; /* Yumuşak geçiş */
+        }
+        #loginButton.hidden {
+            display: none !important;
+        }
+
+        /* Gizli dosya inputu için stil */
+        .custom-file-upload {
+            display: inline-block;
+            cursor: pointer;
+            padding: 10px 15px;
+            background-color: #5bb2e9;
+            color: white;
+            border-radius: 8px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .custom-file-upload:hover {
+            background-color: #3a8ee0;
+        }
+        .custom-file-upload input[type="file"] {
+            display: none;
+        }
+
+        /* Yeni Admin Paneli Toggle Buton Stilleri */
+        .admin-panel-toggle-container {
+            position: fixed;
+            top: 60px; /* Login/Auth bar'ın altında */
+            right: 20px;
+            z-index: 59; /* Login/Auth bar'dan hemen daha düşük */
+            transition: all 0.3s ease;
+        }
+        #adminPanelToggleBtn {
+            background: #5bb2e9; /* Mavi tonu */
+            color: white;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(91, 178, 233, 0.4);
+            width: auto;
+            margin: 0;
+        }
+        #adminPanelToggleBtn:hover {
+            background: #3a8ee0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(58, 142, 224, 0.6);
+        }
+
+        /* Admin Paneli için başlangıçta gizli sınıf */
+        .initially-hidden-admin-panel {
+            display: none !important;
+        }
+
+
+        /* Responsive Ayarlamalar */
         @media (max-width: 768px) {
             body {
                 padding: 10px;
             }
             h1 {
-                font-size: 24px;
+                font-size: 2.5em; /* Daha küçük font */
             }
             h2 {
-                font-size: 20px;
+                font-size: 1.8em;
+            }
+            h3 {
+                font-size: 1.3em;
             }
             th, td {
                 padding: 8px;
                 font-size: 14px;
             }
-            .admin-panel, .keypad, .match-box, .notification-settings {
+            .section-card {
                 padding: 15px;
                 margin: 15px auto;
             }
@@ -163,25 +371,58 @@
                 padding: 10px;
                 font-size: 14px;
             }
+            .flex-row {
+                flex-direction: column; /* Mobil cihazlarda sütun düzeni */
+                gap: 5px;
+            }
+            .flex-row > select, .flex-row > input {
+                width: 100%;
+            }
+            /* Auth/Login Bar ve Buton için Mobil Ayarlar */
+            .auth-status-bar, #loginButton {
+                top: 10px;
+                right: 10px;
+                padding: 5px 10px;
+                font-size: 0.8em;
+                gap: 5px;
+            }
+            .profile-status-img {
+                width: 25px;
+                height: 25px;
+            }
+            .auth-status-bar button {
+                padding: 3px 6px;
+                font-size: 0.8em;
+            }
+            .admin-panel-toggle-container {
+                top: 50px; /* Mobil için daha uygun konum */
+                right: 10px;
+            }
+            #adminPanelToggleBtn {
+                padding: 5px 10px;
+                font-size: 0.8em;
+            }
         }
 
-        /* --- Custom Alert Styles --- */
+        /* --- Özel Uyarı (Custom Alert) Stilleri --- */
         .custom-alert-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.7); /* Daha koyu overlay */
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 10000; /* AUTH MODAL'DAN DAHA YÜKSEK */
             opacity: 0;
             transition: opacity 0.3s ease-in-out;
+            pointer-events: none; /* Tıklama olaylarını geçmesini sağlar */
         }
         .custom-alert-overlay.show {
             opacity: 1;
+            pointer-events: auto; /* Gösterildiğinde tıklama olaylarına izin verir */
         }
         .custom-alert-modal {
             background: #1f1f1f;
@@ -189,37 +430,59 @@
             padding: 30px;
             width: 90%;
             max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
             text-align: center;
-            transform: translateY(-100px); /* Başlangıçta yukarıda gizli */
-            transition: transform 0.4s ease-out, border-color 0.1s ease-in-out;
-            border: 2px solid transparent; /* Varsayılan şeffaf çerçeve */
-            opacity: 0; /* Başlangıçta gizli */
-            animation: slideInFromTop 0.4s ease-out forwards; /* Başlangıç animasyonu */
+            transform: scale(0.8); /* Başlangıçta biraz küçülmüş */
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out, border-color 0.1s ease-in-out;
+            border: 2px solid transparent;
         }
-
+        /* Uyarı tipleri için çerçeve renkleri */
         .custom-alert-modal.warning {
             border-color: #ff9100;
-            animation: slideInFromTop 0.4s ease-out forwards, blinkRedBorderWarning 1s infinite alternate;
+            animation: scaleIn 0.4s ease-out forwards, blinkWarning 1s infinite alternate;
         }
         .custom-alert-modal.success {
             border-color: #1de9b6;
+            animation: scaleIn 0.4s ease-out forwards;
         }
         .custom-alert-modal.error {
             border-color: #ff4d4d;
-            animation: slideInFromTop 0.4s ease-out forwards, blinkRedBorderError 1s infinite alternate;
+            animation: scaleIn 0.4s ease-out forwards, blinkError 1s infinite alternate;
+        }
+        .custom-alert-modal.info {
+            border-color: #5bb2e9;
+            animation: scaleIn 0.4s ease-out forwards;
         }
 
+        /* Uyarı Başlıkları */
         .custom-alert-header {
-            font-size: 24px;
+            font-size: 28px; /* Daha büyük başlık */
             font-weight: bold;
             margin-bottom: 15px;
-            color: #1de9b6; /* Başlık rengi */
+            color: #1de9b6; /* Varsayılan */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px; /* İkon ile metin arası boşluk */
+        }
+        .custom-alert-header::before { /* İkonlar */
+            font-family: 'Arial'; /* Basit ikon için */
+            font-weight: normal;
+            font-size: 1.2em;
+            line-height: 1;
         }
         .custom-alert-header.warning { color: #ff9100; }
+        .custom-alert-header.warning::before { content: '⚠️'; }
         .custom-alert-header.success { color: #1de9b6; }
+        .custom-alert-header.success::before { content: '✅'; }
         .custom-alert-header.error { color: #ff4d4d; }
+        .custom-alert-header.error::before { content: '❌'; }
+        .custom-alert-header.info { color: #5bb2e9; }
+        .custom-alert-header.info::before { content: 'ℹ️'; }
 
+
+        /* Uyarı Gövdesi */
         .custom-alert-body {
             font-size: 18px;
             line-height: 1.5;
@@ -227,107 +490,308 @@
             margin-bottom: 20px;
         }
 
-        /* Keyframe Animations */
-        @keyframes slideInFromTop {
-            from {
-                transform: translateY(-200px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        /* Anahtar Kare Animasyonları */
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
-
-        @keyframes blinkRedBorderWarning {
+        @keyframes scaleOut {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.8); opacity: 0; }
+        }
+        @keyframes blinkWarning {
             0% { border-color: #ff9100; }
             50% { border-color: rgba(255, 145, 0, 0.4); }
             100% { border-color: #ff9100; }
         }
-        @keyframes blinkRedBorderError {
+        @keyframes blinkError {
             0% { border-color: #ff4d4d; }
             50% { border-color: rgba(255, 77, 77, 0.4); }
             100% { border-color: #ff4d4d; }
         }
-
-        /* Modal'ı gizlemek için animasyon (isteğe bağlı, auto-remove olduğu için) */
         .custom-alert-modal.hide {
-            animation: slideOutToTop 0.3s ease-in forwards;
+            animation: scaleOut 0.3s ease-in forwards;
         }
-        @keyframes slideOutToTop {
-            from {
-                transform: translateY(0);
-                opacity: 1;
-            }
-            to {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
+
+        /* --- Giriş/Kayıt Modalı Stilleri --- */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001; /* Alert'ten daha düşük (Alert Z-index 10000) */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .auth-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .auth-modal {
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            position: relative;
+        }
+        .auth-overlay.show .auth-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .auth-modal h2 {
+            color: #1de9b6;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+        .auth-modal input, .auth-modal select {
+            margin-bottom: 15px;
+            border: 1px solid #1de9b6;
+        }
+        .auth-modal button {
+            width: 100%;
+            margin-top: 15px;
+        }
+        .auth-modal .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            font-size: 1.8em;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+            margin: 0;
+            transition: transform 0.2s ease;
+            box-shadow: none; /* Reset shadow from general button style */
+        }
+        .auth-modal .close-btn:hover {
+            transform: rotate(90deg);
+            background: none;
+            box-shadow: none;
+        }
+        #toggleAuthMode {
+            background: #5bb2e9;
+            color: white;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        #toggleAuthMode:hover {
+            background: #3a8ee0;
+        }
+        .profile-picture-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #1de9b6;
+            margin: 15px auto;
+            display: block;
+        }
+
+
+        /* --- Oyuncu Listeleme Modalı Stilleri --- */
+        .players-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1002; /* Auth modal'dan daha yüksek */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .players-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .players-modal {
+            background: #1f1f1f;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 900px; /* Daha geniş modal */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+            position: relative;
+            max-height: 80vh; /* Ekranın %80'i kadar yükseklik */
+            overflow-y: auto; /* İçerik taşarsa kaydırma çubuğu */
+            box-sizing: border-box;
+        }
+        .players-overlay.show .players-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .players-modal h2 {
+            color: #1de9b6;
+            margin-bottom: 25px;
+            font-size: 2em;
+        }
+        .players-modal .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #ff4d4d;
+            font-size: 1.8em;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+            margin: 0;
+            transition: transform 0.2s ease;
+            box-shadow: none;
+        }
+        .players-modal .close-btn:hover {
+            transform: rotate(90deg);
+            background: none;
+            box-shadow: none;
+        }
+
+        /* Oyuncu Listeleme Modalı içindeki tablo stilleri */
+        #playersTable {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(31, 31, 31, 0.7);
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #playersTable th, #playersTable td {
+            padding: 12px; /* Hücre iç boşlukları */
+            text-align: left; /* Metinleri sola hizala */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            vertical-align: middle; /* İçeriği dikey ortala */
+        }
+
+        #playersTable th {
+            background: #1de9b6;
+            color: black;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        #playersTable tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        #playersTable tbody tr.player-row:hover { /* Sadece oyuncu bilgisi satırlarının hoverı */
+            background-color: #2c3e50; /* Satır üzerine gelince renk değişimi */
+            cursor: pointer;
+        }
+
+        /* Oyuncu resmi için özel stil */
+        #playersTable .player-table-img {
+            width: 40px; /* Küçük resim boyutu */
+            height: 40px;
+            border-radius: 50%; /* Yuvarlak */
+            object-fit: cover; /* Resmi hücreye sığdır */
+            border: 2px solid #1de9b6; /* Yeşil çerçeve */
+            display: block; /* Margin auto için */
+            margin: 0 auto; /* Resmi hücre içinde ortala */
+        }
+
+        /* E-posta bilgisi için stil, başlangıçta gizli */
+        .player-email-row td {
+            background-color: rgba(60, 60, 60, 0.9);
+            font-size: 0.85em;
+            color: #1de9b6;
+            text-align: center; /* Ortala */
+            padding: 8px;
+            display: none; /* Başlangıçta gizli */
+            border-top: none; /* Üst çizgiyi kaldır */
+        }
+
+        .player-email-row.show td {
+            display: table-cell; /* Gösterildiğinde görünür yap */
+        }
+
+        #noPlayersMessage {
+            text-align: center;
+            color: #9e9e9e;
+            margin-top: 20px;
+            font-size: 1.1em;
         }
     </style>
 </head>
 <body>
 
-    <h1>YeşilTepe Futbol Turnuvası</h1>
-
-
-
-    <h2>Takım Sıralaması</h2>
-    <div class="table-container">
-        <table id="rankingTable">
-            <thead>
-                <tr>
-                    <th>Sıralama</th>
-                    <th>Takım Adı</th>
-                    <th>Galibiyet</th>
-                    <th>Mağlubiyet</th>
-                    <th>Puan</th>
-                </tr>
-            </thead>
-            <tbody id="rankingBody"></tbody>
-        </table>
+    <button id="loginButton">Giriş Yap / Kayıt Ol</button>
+    <div id="authStatusBar" class="auth-status-bar hidden">
+        <img id="profileStatusImg" class="profile-status-img" src="default-avatar.png" alt="Profil Fotoğrafı">
+        <span id="authStatusText"></span>
+        <button id="logoutButton">Çıkış Yap</button>
     </div>
 
-    <h2>Yaklaşan Maç</h2>
-    <div class="match-box" id="upcomingMatchBox">
-        <div style="font-size:18px; color:#ff9100; text-align:center;" id="upcomingMatchText">Henüz belirlenmedi</div>
-        <div style="font-size:14px; color:#ff9100; text-align:center;" id="upcomingMatchTime">Tarih: - | Saat: -</div>
+    <div class="admin-panel-toggle-container hidden">
+        <button id="adminPanelToggleBtn">Admin Panelini Aç</button>
     </div>
 
-    <h2>Geçmiş Maçlar</h2>
-    <div class="match-box">
-        <table id="pastMatchesTable">
-            <thead>
-                <tr><th>Takım 1</th><th>Skor</th><th>Takım 2</th><th>Tür</th></tr>
-            </thead>
-            <tbody id="pastMatches"></tbody>
-        </table>
-    </div>
+    <h1>Sakarya YeşilTepe Futbol Turnuvası <span style="font-size:0.8em; vertical-align:middle;">⚽🏆</span></h1>
 
-    <button id="openAdminBtn" style="display:block; margin:20px auto; max-width:600px; background:#ff9100; color:#000; font-weight:bold; border:none; border-radius:8px; padding:12px; cursor:pointer;">
-        Admin Panelini Aç / Kapat
-    </button>
-
-    <div class="keypad hidden" id="keypadPanel">
-        <h3>Admin Panel Girişi</h3>
-        <input type="password" id="pinDisplay" placeholder="Şifre" readonly />
-        <div class="keypad-buttons" id="keypadButtons">
-            <button type="button" data-key="1">1</button>
-            <button type="button" data-key="2">2</button>
-            <button type="button" data-key="3">3</button>
-            <button type="button" data-key="4">4</button>
-            <button type="button" data-key="5">5</button>
-            <button type="button" data-key="6">6</button>
-            <button type="button" data-key="7">7</button>
-            <button type="button" data-key="8">8</button>
-            <button type="button" data-key="9">9</button>
-            <button type="button" id="clearPinBtn">Temizle</button>
-            <button type="button" data-key="0">0</button>
-            <button type="button" id="enterPinBtn">Giriş</button>
+    <div class="section-card">
+        <h2>Takım Sıralaması</h2>
+        <div class="table-container">
+            <table id="rankingTable">
+                <thead>
+                    <tr>
+                        <th>Sıralama</th>
+                        <th>Takım Adı</th>
+                        <th>Galibiyet</th>
+                        <th>Mağlubiyet</th>
+                        <th>Puan</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingBody"></tbody>
+            </table>
         </div>
     </div>
 
-    <div class="admin-panel hidden" id="adminPanel">
+    <div class="section-card">
+        <h2>Yaklaşan Maç</h2>
+        <div class="match-box" id="upcomingMatchBox">
+            <div style="font-size:22px; font-weight:bold; color:#ff9100; text-align:center;" id="upcomingMatchText">Henüz belirlenmedi</div>
+            <div style="font-size:16px; color:#ff9100; text-align:center; margin-top: 5px;" id="upcomingMatchTime">Tarih: - | Saat: -</div>
+            <div id="countdown"></div>
+        </div>
+    </div>
+
+    <div class="section-card">
+        <h2>Geçmiş Maçlar</h2>
+        <div class="match-box">
+            <table id="pastMatchesTable">
+                <thead>
+                    <tr><th>Takım 1</th><th>Skor</th><th>Takım 2</th><th>Tür</th></tr>
+                </thead>
+                <tbody id="pastMatches"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="admin-panel section-card initially-hidden-admin-panel" id="adminPanel">
         <h3>Takım Ekle</h3>
         <input type="text" id="teamName" placeholder="Takım Adı" />
         <button id="addTeamBtn">Takımı Ekle</button>
@@ -335,7 +799,7 @@
         <h3>Yeni Maç Belirle</h3>
         <div class="flex-row">
             <select id="teamA"></select>
-            <span>vs</span>
+            <span style="font-weight: bold; color: #1de9b6;">VS</span>
             <select id="teamB"></select>
         </div>
         <input type="date" id="matchDate" />
@@ -350,24 +814,91 @@
         <div class="flex-row">
             <select id="team1"></select>
             <input type="number" id="score1" placeholder="Skor" min="0"/>
-            <span>-</span>
+            <span style="font-weight: bold; color: #1de9b6;">-</span>
             <input type="number" id="score2" placeholder="Skor" min="0"/>
             <select id="team2"></select>
         </div>
         <button id="addPastMatchBtn">Skoru Ekle</button>
     </div>
-    <div class="notification-settings">
+
+    <div class="notification-settings section-card">
         <h3>Bildirim Ayarları</h3>
         <button id="toggleNotificationsBtn">Bildirimleri Aç</button>
         <div id="notificationStatus" class="notification-status">Bildirim Durumu: Bilinmiyor</div>
-        <p style="font-size:12px; color:#ff9100; text-align:center;">Not: Bildirimler sadece site tarayıcıda açıkken gönderilecektir.</p>
+        <p style="font-size:12px; color:#ff9100; text-align:center; margin-top:10px;">Not: Bildirimler sadece site tarayıcıda açıkken gönderilecektir.</p>
     </div>
+
+    <div class="custom-alert-overlay">
+        <div class="custom-alert-modal">
+            <div class="custom-alert-header"></div>
+            <div class="custom-alert-body"></div>
+        </div>
+    </div>
+
+    <div class="auth-overlay">
+        <div class="auth-modal">
+            <button class="close-btn" id="closeAuthModal">&times;</button>
+            <h2 id="authModalTitle">Giriş Yap</h2>
+            <div id="loginForm">
+                <input type="email" id="loginEmail" placeholder="E-posta" />
+                <input type="password" id="loginPassword" placeholder="Şifre" />
+                <button id="loginUserBtn">Giriş Yap</button>
+            </div>
+            <div id="registerForm" class="hidden">
+                <input type="text" id="registerName" placeholder="Adınız" />
+                <input type="text" id="registerSurname" placeholder="Soyadınız" />
+                <input type="number" id="registerAge" placeholder="Yaşınız" min="10" max="99" />
+                <select id="registerTeam">
+                    <option value="">Takım Seçin</option>
+                    </select>
+                <select id="registerPosition">
+                    <option value="">Mevki Seçin</option>
+                    </select>
+                <label for="profilePictureUpload" class="custom-file-upload">Profil Fotoğrafı Seç (İsteğe Bağlı)</label>
+                <input type="file" id="profilePictureUpload" accept="image/*" />
+                <img id="profilePicturePreview" class="profile-picture-preview hidden" alt="Profil Fotoğrafı Önizleme" src="" />
+
+                <input type="email" id="registerEmail" placeholder="E-posta" />
+                <input type="password" id="registerPassword" placeholder="Şifre (Min 6 Karakter)" />
+                <input type="password" id="registerConfirmPassword" placeholder="Şifre Tekrar" />
+                <button id="registerUserBtn">Kayıt Ol</button>
+            </div>
+            <button id="toggleAuthMode">Hesabın mı yok? Kayıt Ol</button>
+        </div>
+    </div>
+
+    <div class="players-overlay">
+        <div class="players-modal">
+            <button class="close-btn" id="closePlayersModal">&times;</button>
+            <h2 id="playersModalTitle">Takım Oyuncuları</h2>
+            <div class="table-container"> <table id="playersTable">
+                    <thead>
+                        <tr>
+                            <th></th> <th>İsim</th>
+                            <th>Soyisim</th>
+                            <th>Mevki</th>
+                            <th>Yaş</th>
+                        </tr>
+                    </thead>
+                    <tbody id="playersTableBody">
+                        </tbody>
+                </table>
+                <p id="noPlayersMessage" style="text-align: center; color: #9e9e9e; margin-top: 20px;" class="hidden">Bu takımda henüz oyuncu bulunmamaktadır.</p>
+            </div>
+        </div>
+    </div>
+
+
     <script type="module">
+        // Firebase Modüllerini Doğru Yollardan Import Edin
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
         import { getDatabase, ref, set, onValue, update, push, runTransaction } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-storage.js";
+
 
         // Firebase yapılandırma - KENDİ BİLGİLERİNİZLE DEĞİŞTİRİN
-        const firebaseConfig = {
+    const firebaseConfig = {
             apiKey: "AIzaSyC_4leEyiGLUg4pF420WtQOC2om-OyWoEU",
             authDomain: "futbol-1e4a5.firebaseapp.com",
             databaseURL: "https://futbol-1e4a5-default-rtdb.firebaseio.com",
@@ -381,20 +912,20 @@
         // Firebase başlat
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
+        const auth = getAuth(app);
+        const storage = getStorage(app);
 
         // DOM referansları
         const rankingBody = document.getElementById("rankingBody");
         const upcomingMatchText = document.getElementById("upcomingMatchText");
         const upcomingMatchTime = document.getElementById("upcomingMatchTime");
+        const countdownDisplay = document.getElementById("countdown");
         const pastMatchesBody = document.getElementById("pastMatches");
 
-        const keypadPanel = document.getElementById("keypadPanel");
         const adminPanel = document.getElementById("adminPanel");
-        const openAdminBtn = document.getElementById("openAdminBtn");
-        const pinDisplay = document.getElementById("pinDisplay");
-        const clearPinBtn = document.getElementById("clearPinBtn");
-        const enterPinBtn = document.getElementById("enterPinBtn");
-        const keypadButtons = document.querySelectorAll("#keypadButtons button[data-key]");
+        const adminPanelToggleContainer = document.querySelector('.admin-panel-toggle-container');
+        const adminPanelToggleBtn = document.getElementById('adminPanelToggleBtn');
+
 
         // Admin Panel Form elemanları
         const teamNameInput = document.getElementById("teamName");
@@ -417,76 +948,124 @@
         const toggleNotificationsBtn = document.getElementById("toggleNotificationsBtn");
         const notificationStatus = document.getElementById("notificationStatus");
 
+        // Giriş/Kayıt Modal Elemanları
+        const loginButton = document.getElementById("loginButton");
+        const authOverlay = document.querySelector(".auth-overlay");
+        const closeAuthModal = document.getElementById("closeAuthModal");
+        const authModalTitle = document.getElementById("authModalTitle");
+        const loginForm = document.getElementById("loginForm");
+        const registerForm = document.getElementById("registerForm");
+        const toggleAuthMode = document.getElementById("toggleAuthMode");
+
+        const loginEmailInput = document.getElementById("loginEmail");
+        const loginPasswordInput = document.getElementById("loginPassword");
+        const loginUserBtn = document.getElementById("loginUserBtn");
+
+        const registerNameInput = document.getElementById("registerName");
+        const registerSurnameInput = document.getElementById("registerSurname"); // Düzeltildi
+        const registerAgeInput = document.getElementById("registerAge");
+        const registerTeamSelect = document.getElementById("registerTeam");
+        const registerPositionSelect = document.getElementById("registerPosition");
+        const profilePictureUpload = document.getElementById("profilePictureUpload");
+        const profilePicturePreview = document.getElementById("profilePicturePreview");
+        const registerEmailInput = document.getElementById("registerEmail");
+        const registerPasswordInput = document.getElementById("registerPassword");
+        const registerConfirmPasswordInput = document.getElementById("registerConfirmPassword");
+        const registerUserBtn = document.getElementById("registerUserBtn");
+
+        const authStatusBar = document.getElementById("authStatusBar");
+        const authStatusText = document.getElementById("authStatusText");
+        const profileStatusImg = document.getElementById("profileStatusImg");
+        const logoutButton = document.getElementById("logoutButton");
+
+        // Oyuncu Listeleme Modalı Elemanları
+        const playersOverlay = document.querySelector(".players-overlay");
+        const closePlayersModal = document.getElementById("closePlayersModal");
+        const playersModalTitle = document.getElementById("playersModalTitle");
+        const playersTableBody = document.getElementById("playersTableBody"); // Güncellenen referans
+        const noPlayersMessage = document.getElementById("noPlayersMessage");
+
+        // Varsayılan Avatar URL'si
+        const DEFAULT_AVATAR_URL = 'https://sdmntpreastus2.oaiusercontent.com/files/00000000-1218-61f6-8fec-5177368d4f76/raw?se=2025-06-20T08%3A17%3A10Z&sp=r&sv=2024-08-04&sr=b&scid=376f3417-f9f4-5eb7-b733-c93108c59093&skoid=0a4a0f0c-99ac-4752-9d87-cfac036fa93f&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-06-20T06%3A44%3A18Z&ske=2025-06-21T06%3A44%3A18Z&sks=b&skv=2024-08-04&sig=fvRFm5Fh/D7MiDoPe597Cqx668qwifaJJTMQEB6C/mo%3D';
+
+        // Admin e-postası (burayı kendi admin e-postanızla değiştirin)
+        const ADMIN_EMAIL = "admin@gmail.com"; // Birden fazla admin e-postası
+
+        let currentAuthMode = 'login';
+        let selectedFile = null;
+
+        // Mevki seçenekleri (Türkçe)
+        const positions = [
+            "Kaleci", "Stoper", "Sağ Bek", "Sol Bek", "Ön Libero",
+            "Merkez Orta Saha", "Ofansif Orta Saha", "Sağ Kanat", "Sol Kanat",
+            "Forvet", "Santrafor", "Gizli Forvet", "Yedek Kadro"
+        ];
+
+        // Mevki dropdown'ını doldur
+        positions.forEach(pos => {
+            const opt = document.createElement("option");
+            opt.value = pos;
+            opt.textContent = pos;
+            registerPositionSelect.appendChild(opt);
+        });
+
+        // Admin paneli başlangıçta gizli olsun
+        adminPanel.classList.add('initially-hidden-admin-panel');
+
+
         // --- Custom Alert Fonksiyonu ---
-        /**
-         * Shows a custom alert modal.
-         * @param {string} message The message to display in the alert.
-         * @param {'success' | 'warning' | 'error' | 'info'} type The type of alert for styling and icon.
-         * @param {number} duration The duration in milliseconds before the alert automatically hides. Default is 4000ms.
-         */
         function showAlert(message, type = 'info', duration = 4000) {
-            // Remove any existing alerts to prevent stacking issues
-            const existingAlerts = document.querySelectorAll('.custom-alert-overlay');
-            existingAlerts.forEach(alert => alert.remove());
+            const overlay = document.querySelector('.custom-alert-overlay');
+            const modal = document.querySelector('.custom-alert-modal');
+            const header = document.querySelector('.custom-alert-header');
+            const body = document.querySelector('.custom-alert-body');
 
-            const overlay = document.createElement('div');
-            overlay.className = 'custom-alert-overlay';
+            modal.className = 'custom-alert-modal';
+            header.className = 'custom-alert-header';
 
-            const modal = document.createElement('div');
-            modal.className = `custom-alert-modal ${type}`;
+            modal.classList.add(type);
+            header.classList.add(type);
 
             let titleText = '';
-            if (type === 'success') {
-                titleText = 'Başarılı!';
-            } else if (type === 'warning') {
-                titleText = 'Uyarı!';
-            } else if (type === 'error') {
-                titleText = 'Hata!';
-            } else {
-                titleText = 'Bilgi';
-            }
+            if (type === 'success') { titleText = 'Başarılı!'; }
+            else if (type === 'warning') { titleText = 'Uyarı!'; }
+            else if (type === 'error') { titleText = 'Hata!'; }
+            else { titleText = 'Bilgi'; }
 
-            const header = document.createElement('div');
-            header.className = `custom-alert-header ${type}`;
             header.textContent = titleText;
-
-            const body = document.createElement('div');
-            body.className = 'custom-alert-body';
             body.textContent = message;
 
-            modal.appendChild(header);
-            modal.appendChild(body);
-            overlay.appendChild(modal);
-            document.body.appendChild(overlay);
+            overlay.classList.add('show');
 
-            // Trigger show animation
-            requestAnimationFrame(() => {
-                overlay.classList.add('show');
-            });
-
-            // Hide and remove after duration
             setTimeout(() => {
-                modal.classList.add('hide'); // Start hide animation
+                modal.classList.add('hide');
                 modal.addEventListener('animationend', () => {
-                    overlay.remove(); // Remove overlay after animation
-                }, { once: true }); // Ensure listener runs only once
+                    overlay.classList.remove('show');
+                    modal.classList.remove('hide');
+                }, { once: true });
             }, duration);
         }
 
-
         // --- Bildirim Ayarları ---
-
-        // Bildirim UI'sini güncelle
         function updateNotificationUI() {
+            if (!("Notification" in window)) {
+                toggleNotificationsBtn.textContent = "Bildirimler Desteklenmiyor";
+                notificationStatus.textContent = "Bildirim Durumu: Desteklenmiyor";
+                notificationStatus.style.color = '#ff4d4d';
+                toggleNotificationsBtn.disabled = true;
+                return;
+            }
+
             if (Notification.permission === 'granted') {
-                toggleNotificationsBtn.textContent = "Bildirimleri Kapat"; // Visual only, cannot programmatically revoke
+                toggleNotificationsBtn.textContent = "Bildirimleri Kapat (Tarayıcı ayarlarından)";
                 notificationStatus.textContent = "Bildirim Durumu: Açık";
                 notificationStatus.style.color = '#1de9b6';
+                toggleNotificationsBtn.disabled = true;
             } else if (Notification.permission === 'denied') {
                 toggleNotificationsBtn.textContent = "Bildirimleri Aç (Engellendi)";
                 notificationStatus.textContent = "Bildirim Durumu: Engellendi (Tarayıcı ayarlarından izin verin)";
                 notificationStatus.style.color = '#ff4d4d';
-                toggleNotificationsBtn.disabled = true; // Disable button if permission is denied
+                toggleNotificationsBtn.disabled = true;
             } else {
                 toggleNotificationsBtn.textContent = "Bildirimleri Aç";
                 notificationStatus.textContent = "Bildirim Durumu: Bilinmiyor";
@@ -495,98 +1074,59 @@
             }
         }
 
-        // Bildirim izni iste
         toggleNotificationsBtn.addEventListener('click', async () => {
+            if (!("Notification" in window)) {
+                showAlert("Bu tarayıcı bildirimleri desteklemiyor.", 'error');
+                return;
+            }
+
             if (Notification.permission === 'granted') {
-                console.log("Bildirimler zaten açık.");
                 showAlert("Bildirimler zaten açık. Kapatmak için tarayıcı ayarlarınızı kullanın.", 'info');
-            } else {
+            } else if (Notification.permission === 'denied') {
+                showAlert("Bildirim izni daha önce reddedildi. Lütfen tarayıcı ayarlarınızdan bu siteye bildirim izni verin.", 'warning');
+            }
+            else {
                 const permission = await Notification.requestPermission();
                 updateNotificationUI();
                 if (permission === 'granted') {
-                    console.log('Bildirim izni verildi.');
                     showAlert("Bildirim izni verildi. Artık site açıkken bildirim alacaksınız.", 'success');
                 } else {
-                    console.log('Bildirim izni reddedildi.');
                     showAlert("Bildirim izni reddedildi. Bildirim alamayacaksınız.", 'warning');
                 }
             }
         });
 
-        // Sayfa yüklendiğinde bildirim durumunu kontrol et
         window.addEventListener('DOMContentLoaded', updateNotificationUI);
 
-
-        // Yerel bildirim göster (Service Worker olmadan - sadece tarayıcı açıkken çalışır)
         async function showTournamentNotification(title, body) {
             if (Notification.permission === 'granted') {
                 const options = {
                     body: body,
-                    icon: 'https://placehold.co/48x48/1de9b6/000?text=⚽', // Küçük bir ikon
-                    badge: 'https://placehold.co/48x48/1de9b6/000?text=🏆', // Mobil için rozet
-                    tag: 'tournament-update', // Aynı türden bildirimleri birleştirmek için
-                    renotify: true // Aynı tag'e sahip yeni bir bildirim gelirse tekrar titreşim vs.
+                    icon: 'https://placehold.co/48x48/1de9b6/000?text=⚽',
+                    badge: 'https://placehold.co/48x48/1de9b6/000?text=🏆',
+                    tag: 'tournament-update',
+                    renotify: true
                 };
-                new Notification(title, options); // Doğrudan bildirim oluştur
-                console.log('Bildirim doğrudan gönderildi.');
-            } else {
-                console.log('Bildirim izni verilmediği için bildirim gösterilemedi.');
+                new Notification(title, options);
             }
         }
 
-
-        // --- Admin Panel Açma/Kapama & Şifre Yönetimi ---
-        let pin = "";
-        openAdminBtn.addEventListener("click", () => {
-            if (!adminPanel.classList.contains("hidden")) {
-                adminPanel.classList.add("hidden");
-                keypadPanel.classList.add("hidden");
-            } else {
-                keypadPanel.classList.remove("hidden");
-            }
-            pin = "";
-            pinDisplay.value = "";
-        });
-
-        keypadButtons.forEach(btn => {
-            btn.addEventListener("click", () => {
-                if (pin.length < 4) {
-                    pin += btn.dataset.key;
-                    pinDisplay.value = "*".repeat(pin.length);
-                }
-            });
-        });
-
-        clearPinBtn.addEventListener("click", () => {
-            pin = "";
-            pinDisplay.value = "";
-        });
-
-        enterPinBtn.addEventListener("click", () => {
-            if (pin === "1221") { // Admin password
-                adminPanel.classList.remove("hidden");
-                keypadPanel.classList.add("hidden");
-                showAlert("Admin Paneline hoş geldiniz!", 'success');
-            } else {
-                showAlert("Hatalı şifre!", 'error'); // Custom alert for wrong password
-            }
-            pin = "";
-            pinDisplay.value = "";
-        });
-
         // --- Takım Yönetimi ---
-        // Takımları Firebase'den çek ve tablo olarak göster
+        let currentTeamsData = []; // Global olarak takım verilerini tutmak için
+
         function renderTeams(snapshot) {
             rankingBody.innerHTML = "";
             const teams = [];
             snapshot.forEach(childSnap => {
                 teams.push(childSnap.val());
             });
-            // Takımları puana göre sırala (büyükten küçüğe)
             teams.sort((a, b) => (b.points || 0) - (a.points || 0));
+            currentTeamsData = teams; // Global değişkeni güncelle
 
             teams.forEach((team, i) => {
                 const tr = document.createElement("tr");
+                tr.classList.add('team-row');
+                tr.dataset.teamName = team.name;
                 tr.innerHTML = `
                     <td>${i + 1}</td>
                     <td>${team.name}</td>
@@ -596,16 +1136,14 @@
                 `;
                 rankingBody.appendChild(tr);
             });
-            // Dropdown'ları güncelle
             updateDropdowns(teams);
+            updateRegisterTeamSelect(teams); // Yeni eklenen kısım: Kayıt modalındaki takım seçicisini güncelle
         }
 
-        // Dropdownları güncelle (takımlar)
         function updateDropdowns(teams) {
             [teamASelect, teamBSelect, team1Select, team2Select].forEach(sel => {
-                const currentVal = sel.value; // Preserve selected value
+                const currentVal = sel.value;
                 sel.innerHTML = "";
-                // Add empty option
                 const defaultOpt = document.createElement("option");
                 defaultOpt.value = "";
                 defaultOpt.textContent = "Takım Seçin";
@@ -619,20 +1157,42 @@
                     opt.textContent = team.name;
                     sel.appendChild(opt);
                 });
-                // If previous value is still in the list, re-select it
                 if (Array.from(sel.options).some(opt => opt.value === currentVal)) {
                     sel.value = currentVal;
                 } else {
-                    sel.value = ""; // Reset to default if not found
+                    sel.value = "";
                 }
             });
         }
 
-        // Firebase "teams" referansı dinleyicisi
-        const teamsRef = ref(db, "teams");
-        onValue(teamsRef, renderTeams);
+        // Kayıt modalındaki takım seçicisini güncellemek için ayrı bir fonksiyon
+        function updateRegisterTeamSelect(teams) {
+            const currentVal = registerTeamSelect.value;
+            registerTeamSelect.innerHTML = "";
+            const defaultOpt = document.createElement("option");
+            defaultOpt.value = "";
+            defaultOpt.textContent = "Takım Seçin";
+            defaultOpt.disabled = true;
+            defaultOpt.selected = true;
+            registerTeamSelect.appendChild(defaultOpt);
 
-        // Takım ekleme
+            teams.forEach(team => {
+                const opt = document.createElement("option");
+                opt.value = team.name;
+                opt.textContent = team.name;
+                registerTeamSelect.appendChild(opt);
+            });
+            if (Array.from(registerTeamSelect.options).some(opt => opt.value === currentVal)) {
+                registerTeamSelect.value = currentVal;
+            } else {
+                registerTeamSelect.value = "";
+            }
+        }
+
+
+        const teamsRef = ref(db, "teams");
+        onValue(teamsRef, renderTeams); // Realtime dinleyici
+
         addTeamBtn.addEventListener("click", async () => {
             const name = teamNameInput.value.trim();
             if (!name) {
@@ -640,28 +1200,69 @@
                 return;
             }
             const teamRef = ref(db, "teams/" + name);
-            // Initialize new team with 0 stats
-            await set(teamRef, { name, wins: 0, losses: 0, points: 0 });
-            teamNameInput.value = "";
-            showAlert(`${name} takımı başarıyla eklendi!`, 'success');
+            try {
+                // Takımın var olup olmadığını kontrol et
+                const snapshot = await new Promise(resolve => onValue(teamRef, resolve, { onlyOnce: true }));
+                if (snapshot.exists()) {
+                    showAlert("Bu takım zaten mevcut!", 'warning');
+                    return;
+                }
+
+                await set(teamRef, { name, wins: 0, losses: 0, points: 0 });
+                teamNameInput.value = "";
+                showAlert(`${name} takımı başarıyla eklendi!`, 'success');
+            } catch (error) {
+                console.error("Takım eklenirken hata oluştu:", error);
+                showAlert("Takım eklenirken bir hata oluştu.", 'error');
+            }
         });
 
-        // --- Yaklaşan Maç Yönetimi ---
-        // Yaklaşan maçı göster
+        // --- Yaklaşan Maç Yönetimi & Geri Sayım ---
+        let countdownInterval;
+
+        function updateCountdown(matchTimestamp) {
+            clearInterval(countdownInterval); // Önceki sayacı temizle
+            if (!matchTimestamp || isNaN(matchTimestamp)) {
+                countdownDisplay.textContent = "";
+                return;
+            }
+
+            countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = matchTimestamp - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    countdownDisplay.textContent = "MAÇ BAŞLADI!";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                countdownDisplay.textContent = `Kalan Süre: ${days}g ${hours}s ${minutes}d ${seconds}sn`;
+            }, 1000);
+        }
+
         function renderUpcomingMatch(snapshot) {
             const data = snapshot.val();
             if (!data || !data.teamA) {
                 upcomingMatchText.textContent = "Henüz belirlenmedi";
                 upcomingMatchTime.textContent = "Tarih: - | Saat: -";
+                updateCountdown(null);
                 return;
             }
             upcomingMatchText.textContent = `${data.teamA} vs ${data.teamB}`;
             upcomingMatchTime.textContent = `Tarih: ${data.date} | Saat: ${data.time}`;
+
+            const matchDateTime = new Date(`${data.date}T${data.time}:00`).getTime();
+            updateCountdown(matchDateTime);
         }
         const upcomingMatchRef = ref(db, "upcomingMatch");
         onValue(upcomingMatchRef, renderUpcomingMatch);
 
-        // Yeni maç belirleme
         setUpcomingMatchBtn.addEventListener("click", async () => {
             const teamA = teamASelect.value;
             const teamB = teamBSelect.value;
@@ -676,17 +1277,19 @@
                 showAlert("Takımlar farklı olmalı!", 'error');
                 return;
             }
-            await set(upcomingMatchRef, { teamA, teamB, date, time });
-            showAlert("Yaklaşan maç başarıyla güncellendi!", 'success');
-            matchDateInput.value = "";
-            matchTimeInput.value = "";
-
-            // Send notification
-            showTournamentNotification("Yaklaşan Maç Belirlendi!", `${teamA} vs ${teamB} maçı ${date} tarihinde, ${time} saatinde oynanacak.`);
+            try {
+                await set(upcomingMatchRef, { teamA, teamB, date, time });
+                showAlert("Yaklaşan maç başarıyla güncellendi!", 'success');
+                matchDateInput.value = "";
+                matchTimeInput.value = "";
+                showTournamentNotification("Yaklaşan Maç Belirlendi!", `${teamA} vs ${teamB} maçı ${date} tarihinde, ${time} saatinde oynanacak.`);
+            } catch (error) {
+                console.error("Yaklaşan maç güncellenirken hata oluştu:", error);
+                showAlert("Yaklaşan maç güncellenirken bir hata oluştu.", 'error');
+            }
         });
 
         // --- Geçmiş Maçlar ve Skor Yönetimi ---
-        // Geçmiş maçları listele (en yeni en üstte)
         const pastMatchesRef = ref(db, "pastMatches");
         onValue(pastMatchesRef, snapshot => {
             pastMatchesBody.innerHTML = "";
@@ -695,7 +1298,6 @@
                 matches.push(childSnap.val());
             });
 
-            // Reverse matches to show newest on top
             matches.reverse();
 
             matches.forEach(m => {
@@ -712,15 +1314,14 @@
             });
         });
 
-        // Skor ekleme (Puanlama maç türüne göre)
         addPastMatchBtn.addEventListener("click", async () => {
             const team1 = team1Select.value;
             const team2 = team2Select.value;
             const score1 = parseInt(score1Input.value);
             const score2 = parseInt(score2Input.value);
-            const matchType = matchTypeSelect.value; // Get match type
+            const matchType = matchTypeSelect.value;
 
-            if (!team1 || !team2 || team1 === "" || team2 === "") { // Empty option check
+            if (!team1 || !team2 || team1 === "" || team2 === "") {
                 showAlert("Takımları seçin!", 'warning');
                 return;
             }
@@ -733,52 +1334,354 @@
                 return;
             }
 
-            // Save score and match type
-            const newMatchRef = push(pastMatchesRef);
-            await set(newMatchRef, { team1, team2, score1, score2, type: matchType });
+            try {
+                const newMatchRef = push(pastMatchesRef);
+                await set(newMatchRef, { team1, team2, score1, score2, type: matchType });
 
-            // Apply points only for 'Lig' matches
-            if (matchType === 'Lig') {
-                if (score1 === score2) {
-                    showAlert("Maç berabere bitti. Puanlama yapılmadı.", 'info');
+                if (matchType === 'Lig') {
+                    if (score1 === score2) {
+                        showAlert("Maç berabere bitti. Puanlama yapılmadı.", 'info');
+                    } else {
+                        const winnerName = score1 > score2 ? team1 : team2;
+                        const loserName = score1 > score2 ? team2 : team1;
+
+                        const winnerRef = ref(db, 'teams/' + winnerName);
+                        await runTransaction(winnerRef, (currentTeam) => {
+                            if (currentTeam) {
+                                currentTeam.wins = (currentTeam.wins || 0) + 1;
+                                currentTeam.points = (currentTeam.points || 0) + 3;
+                            }
+                            return currentTeam;
+                        });
+
+                        const loserRef = ref(db, 'teams/' + loserName);
+                        await runTransaction(loserRef, (currentTeam) => {
+                            if (currentTeam) {
+                                currentTeam.losses = (currentTeam.losses || 0) + 1;
+                            }
+                            return currentTeam;
+                        });
+                        showAlert("Maç skoru eklendi ve puanlar güncellendi!", 'success');
+                    }
                 } else {
-                    const winnerName = score1 > score2 ? team1 : team2;
-                    const loserName = score1 > score2 ? team2 : team1;
-
-                    // Update winner team stats (3 points, 1 win)
-                    const winnerRef = ref(db, 'teams/' + winnerName);
-                    runTransaction(winnerRef, (currentTeam) => {
-                        if (currentTeam) {
-                            currentTeam.wins = (currentTeam.wins || 0) + 1;
-                            currentTeam.points = (currentTeam.points || 0) + 3;
-                        }
-                        return currentTeam;
-                    }).catch(error => console.error("Kazanan takım güncelleme hatası:", error));
-
-                    // Update loser team stats (1 loss)
-                    const loserRef = ref(db, 'teams/' + loserName);
-                    runTransaction(loserRef, (currentTeam) => {
-                        if (currentTeam) {
-                            currentTeam.losses = (currentTeam.losses || 0) + 1;
-                        }
-                        return currentTeam;
-                    }).catch(error => console.error("Kaybeden takım güncelleme hatası:", error));
-                    showAlert("Maç skoru eklendi ve puanlar güncellendi!", 'success');
+                    showAlert("Hazırlık maçı skoru başarıyla eklendi!", 'success');
                 }
+
+                score1Input.value = "";
+                score2Input.value = "";
+                team1Select.value = "";
+                team2Select.value = "";
+
+                showTournamentNotification("Yeni Skor Eklendi!", `${team1} ${score1} - ${score2} ${team2} maçı sonuçlandı.`);
+
+            } catch (error) {
+                console.error("Skor eklenirken veya puanlar güncellenirken hata oluştu:", error);
+                showAlert("Skor eklenirken bir hata oluştu.", 'error');
+            }
+        });
+
+        // --- Kullanıcı Giriş/Kayıt Fonksiyonları ---
+
+        loginButton.addEventListener('click', () => {
+            authOverlay.classList.add('show');
+            authModalTitle.textContent = "Giriş Yap";
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+            toggleAuthMode.textContent = "Hesabın mı yok? Kayıt Ol";
+            currentAuthMode = 'login';
+            // Clear inputs
+            loginEmailInput.value = '';
+            loginPasswordInput.value = '';
+            registerNameInput.value = '';
+            registerSurnameInput.value = '';
+            registerAgeInput.value = '';
+            registerTeamSelect.value = '';
+            registerPositionSelect.value = '';
+            profilePictureUpload.value = ''; // File input'u temizle
+            profilePicturePreview.src = '';
+            profilePicturePreview.classList.add('hidden');
+            selectedFile = null; // selectedFile'ı sıfırla
+
+            registerEmailInput.value = '';
+            registerPasswordInput.value = '';
+            registerConfirmPasswordInput.value = '';
+        });
+
+        closeAuthModal.addEventListener('click', () => {
+            authOverlay.classList.remove('show');
+        });
+
+        toggleAuthMode.addEventListener('click', () => {
+            if (currentAuthMode === 'login') {
+                authModalTitle.textContent = "Kayıt Ol";
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+                toggleAuthMode.textContent = "Zaten hesabın var mı? Giriş Yap";
+                currentAuthMode = 'register';
+                // Kayıt formuna geçerken giriş formunu temizle
+                loginEmailInput.value = '';
+                loginPasswordInput.value = '';
             } else {
-                 showAlert("Hazırlık maçı skoru başarıyla eklendi!", 'success');
+                authModalTitle.textContent = "Giriş Yap";
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                toggleAuthMode.textContent = "Hesabın mı yok? Kayıt Ol";
+                currentAuthMode = 'login';
+                // Giriş formuna geçerken kayıt formunu temizle
+                registerNameInput.value = '';
+                registerSurnameInput.value = '';
+                registerAgeInput.value = '';
+                registerTeamSelect.value = '';
+                registerPositionSelect.value = '';
+                profilePictureUpload.value = '';
+                profilePicturePreview.src = '';
+                profilePicturePreview.classList.add('hidden');
+                selectedFile = null;
+                registerEmailInput.value = '';
+                registerPasswordInput.value = '';
+                registerConfirmPasswordInput.value = '';
+            }
+        });
+
+        // Profil fotoğrafı önizlemesi
+        profilePictureUpload.addEventListener('change', (event) => {
+            selectedFile = event.target.files[0];
+            if (selectedFile) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    profilePicturePreview.src = e.target.result;
+                    profilePicturePreview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(selectedFile);
+            } else {
+                profilePicturePreview.src = '';
+                profilePicturePreview.classList.add('hidden');
+            }
+        });
+
+        registerUserBtn.addEventListener('click', async () => {
+            const name = registerNameInput.value.trim();
+            const surname = registerSurnameInput.value.trim();
+            const age = parseInt(registerAgeInput.value); // Sayı olarak alınmalı
+            const team = registerTeamSelect.value;
+            const position = registerPositionSelect.value;
+            const email = registerEmailInput.value.trim();
+            const password = registerPasswordInput.value;
+            const confirmPassword = registerConfirmPasswordInput.value;
+
+            if (!name || !surname || isNaN(age) || !team || !position || !email || !password || !confirmPassword) {
+                showAlert("Lütfen tüm alanları doldurun!", 'warning');
+                return;
+            }
+            if (age < 10 || age > 99) { // Yaş kontrolü
+                 showAlert("Geçerli bir yaş girin (10-99 arası).", 'warning');
+                 return;
+            }
+            if (password.length < 6) {
+                showAlert("Şifre en az 6 karakter olmalı!", 'warning');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showAlert("Şifreler eşleşmiyor!", 'error');
+                return;
             }
 
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
 
-            // Formu temizle
-            score1Input.value = "";
-            score2Input.value = "";
-            team1Select.value = ""; // Reset options to default
-            team2Select.value = ""; // Reset options to default
+                let photoURL = DEFAULT_AVATAR_URL; // Varsayılan resim URL'si
+                if (selectedFile) {
+                    const imageRef = storageRef(storage, `profile_pictures/${user.uid}/${selectedFile.name}`);
+                    await uploadBytes(imageRef, selectedFile);
+                    photoURL = await getDownloadURL(imageRef);
+                }
 
-            // Send notification
-            showTournamentNotification("Yeni Skor Eklendi!", `${team1} ${score1} - ${score2} ${team2} maçı sonuçlandı.`);
+                // Kullanıcı bilgilerini Realtime Database'e kaydet
+                await set(ref(db, 'users/' + user.uid), {
+                    name: name,
+                    surname: surname,
+                    age: age,
+                    team: team,
+                    position: position,
+                    email: email,
+                    profilePicture: photoURL // Burası önemli!
+                });
+
+                showAlert("Kayıt başarılı! Giriş yapabilirsiniz.", 'success');
+                authOverlay.classList.remove('show');
+                toggleAuthMode.click(); // Giriş formuna geri dön
+            } catch (error) {
+                console.error("Kayıt hatası:", error);
+                let errorMessage = "Kayıt olurken bir hata oluştu.";
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMessage = "Bu e-posta adresi zaten kullanılıyor.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMessage = "Geçersiz e-posta adresi.";
+                } else if (error.code === 'auth/weak-password') {
+                    errorMessage = "Şifre çok zayıf.";
+                }
+                showAlert(errorMessage, 'error');
+            }
         });
+
+        loginUserBtn.addEventListener('click', async () => {
+            const email = loginEmailInput.value.trim();
+            const password = loginPasswordInput.value;
+
+            if (!email || !password) {
+                showAlert("Lütfen e-posta ve şifrenizi girin!", 'warning');
+                return;
+            }
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showAlert("Giriş başarılı!", 'success');
+                authOverlay.classList.remove('show');
+            } catch (error) {
+                console.error("Giriş hatası:", error);
+                let errorMessage = "Giriş yaparken bir hata oluştu.";
+                // Firebase kimlik doğrulama hata kodları
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                    // Firebase SDK'sının yeni versiyonlarında invalid-email ve wrong-password yerine daha genel invalid-credential kullanılabiliyor.
+                    errorMessage = "Geçersiz e-posta veya şifre.";
+                } else if (error.code === 'auth/user-disabled') {
+                    errorMessage = "Hesabınız devre dışı bırakılmıştır.";
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMessage = "Çok fazla başarısız giriş denemesi. Lütfen daha sonra tekrar deneyin.";
+                }
+                showAlert(errorMessage, 'error');
+            }
+        });
+
+        logoutButton.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                showAlert("Çıkış yapıldı.", 'info');
+            } catch (error) {
+                console.error("Çıkış yaparken hata:", error);
+                showAlert("Çıkış yaparken bir hata oluştu.", 'error');
+            }
+        });
+
+        // Kullanıcı oturum durumu değişikliği dinleyicisi
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                loginButton.classList.add('hidden');
+                authStatusBar.classList.remove('hidden');
+                authStatusBar.classList.add('logged-in');
+                profileStatusImg.classList.remove('hidden'); // Giriş yapıldığında resmi göster
+
+                const userRef = ref(db, 'users/' + user.uid);
+                // `onValue` dinleyicisi, veritabanındaki değişiklikleri gerçek zamanlı olarak takip etmeli.
+                // `onlyOnce: true` burada kullanılmamalı.
+                onValue(userRef, (snapshot) => {
+                    const userData = snapshot.val();
+                    if (userData) {
+                        authStatusText.textContent = `Merhaba, ${userData.name || user.email}!`; // Eğer isim yoksa e-posta göster
+                        profileStatusImg.src = userData.profilePicture || DEFAULT_AVATAR_URL;
+                    } else {
+                        // Kullanıcının Firebase Auth'ta kaydı var ama Realtime DB'de verisi yoksa
+                        authStatusText.textContent = `Merhaba, ${user.email}!`;
+                        profileStatusImg.src = DEFAULT_AVATAR_URL;
+                    }
+
+                    if (user.email === ADMIN_EMAIL) {
+                        adminPanelToggleContainer.classList.remove('hidden'); // Admin butonu görünür olsun
+                    } else {
+                        adminPanelToggleContainer.classList.add('hidden'); // Admin değilse gizle
+                        adminPanel.classList.add('initially-hidden-admin-panel'); // Paneli gizle
+                        adminPanelToggleBtn.textContent = 'Admin Panelini Aç'; // Buton metnini sıfırla
+                    }
+                });
+
+            } else {
+                loginButton.classList.remove('hidden');
+                authStatusBar.classList.add('hidden');
+                authStatusBar.classList.remove('logged-in');
+                profileStatusImg.classList.add('hidden');
+                profileStatusImg.src = ''; // Çıkış yapıldığında resmi temizle
+
+                adminPanelToggleContainer.classList.add('hidden'); // Admin butonu gizle
+                adminPanel.classList.add('initially-hidden-admin-panel'); // Paneli gizle
+                adminPanelToggleBtn.textContent = 'Admin Panelini Aç'; // Buton metnini sıfırla
+            }
+        });
+
+        // Admin Panelini Aç/Kapat Butonu
+        adminPanelToggleBtn.addEventListener('click', () => {
+            if (adminPanel.classList.contains('initially-hidden-admin-panel')) {
+                adminPanel.classList.remove('initially-hidden-admin-panel');
+                adminPanelToggleBtn.textContent = 'Admin Panelini Kapat';
+            } else {
+                adminPanel.classList.add('initially-hidden-admin-panel');
+                adminPanelToggleBtn.textContent = 'Admin Panelini Aç';
+            }
+        });
+
+
+        // --- Takım Oyuncuları Listeleme Modalı ---
+        rankingBody.addEventListener('click', async (event) => {
+            const targetRow = event.target.closest('.team-row');
+            if (targetRow) {
+                const teamName = targetRow.dataset.teamName;
+                playersModalTitle.textContent = `${teamName} Takımı Oyuncuları`;
+                playersTableBody.innerHTML = ''; // Eski satırları temizle
+                noPlayersMessage.classList.add('hidden');
+
+                const usersRef = ref(db, 'users');
+                let players = [];
+
+                // onValue dinleyicisini bir kez çalışacak şekilde ayarla
+                onValue(usersRef, (snapshot) => {
+                    playersTableBody.innerHTML = ''; // Her seferinde içeriği temizle
+                    players = []; // Listeyi sıfırla
+                    snapshot.forEach(childSnap => {
+                        const userData = childSnap.val();
+                        if (userData.team === teamName) {
+                            players.push({ ...userData, uid: childSnap.key });
+                        }
+                    });
+
+                    if (players.length > 0) {
+                        players.forEach(userData => {
+                            const tr = document.createElement('tr');
+                            tr.classList.add('player-row');
+                            tr.dataset.playerEmail = userData.email; // E-posta bilgisini satıra ekle
+                            tr.innerHTML = `
+                                <td><img src="${userData.profilePicture || DEFAULT_AVATAR_URL}" alt="${userData.name}" class="player-table-img"></td>
+                                <td>${userData.name || 'Bilinmiyor'}</td>
+                                <td>${userData.surname || 'Bilinmiyor'}</td>
+                                <td>${userData.position || 'Bilinmiyor'}</td>
+                                <td>${userData.age || 'Bilinmiyor'}</td>
+                            `;
+                            playersTableBody.appendChild(tr);
+
+                            // E-posta bilgisi için ayrı bir satır (başlangıçta gizli)
+                            const emailTr = document.createElement('tr');
+                            emailTr.classList.add('player-email-row'); // Başlangıçta gizli
+                            emailTr.innerHTML = `<td colspan="5">E-posta: <a href="mailto:${userData.email}" style="color: #ff9100; text-decoration: none;">${userData.email || 'Bilinmiyor'}</a></td>`;
+                            playersTableBody.appendChild(emailTr);
+
+
+                            // Satıra tıklandığında e-posta bilgisini göster/gizle
+                            tr.addEventListener('click', () => {
+                                emailTr.classList.toggle('show');
+                            });
+                        });
+                        noPlayersMessage.classList.add('hidden');
+                    } else {
+                        noPlayersMessage.classList.remove('hidden');
+                    }
+                    playersOverlay.classList.add('show');
+                }, { onlyOnce: true }); // Sadece bir kez veri almasını sağlar
+            }
+        });
+
+        closePlayersModal.addEventListener('click', () => {
+            playersOverlay.classList.remove('show');
+        });
+
     </script>
 </body>
 </html>
