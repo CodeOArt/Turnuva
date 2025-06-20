@@ -1459,98 +1459,72 @@
             }
         });
 
-      registerUserBtn.addEventListener('click', async () => {
-    const name = registerNameInput.value.trim();
-    const surname = registerSurnameInput.value.trim();
-    const age = parseInt(registerAgeInput.value);
-    const team = registerTeamSelect.value;
-    const position = registerPositionSelect.value;
-    const email = registerEmailInput.value.trim();
-    const password = registerPasswordInput.value;
-    const confirmPassword = registerConfirmPasswordInput.value;
+     registerUserBtn.addEventListener('click', async () => {
+            const name = registerNameInput.value.trim();
+            const surname = registerSurnameInput.value.trim();
+            const age = parseInt(registerAgeInput.value);
+            const team = registerTeamSelect.value;
+            const position = registerPositionSelect.value;
+            const email = registerEmailInput.value.trim();
+            const password = registerPasswordInput.value;
+            const confirmPassword = registerConfirmPasswordInput.value;
 
-    // İlk olarak tüm temel alanların doldurulduğundan emin olalım
-    if (!name || !surname || isNaN(age) || !team || !position || !email || !password || !confirmPassword) {
-        showAlert("Lütfen tüm zorunlu alanları doldurun (yaş, takım, mevki, e-posta, şifre).", 'warning');
-        return;
-    }
-    if (age < 6 || age > 20) {
-        showAlert("Geçerli bir yaş girin (6-20 arası).", 'warning');
-        return;
-    }
-    if (password.length < 6) {
-        showAlert("Şifre en az 6 karakter olmalı!", 'warning');
-        return;
-    }
-    if (password !== confirmPassword) {
-        showAlert("Şifreler eşleşmiyor!", 'error');
-        return;
-    }
-
-    try {
-        // Firebase Authentication ile kullanıcı oluştur
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-
-        let photoURL = DEFAULT_AVATAR_URL; // Varsayılan resim URL'si olarak başlat
-
-        // SADECE bir dosya seçilmişse yükleme işlemini dene
-        if (selectedFile) {
-            // Dosyanın gerçekten bir File nesnesi olduğundan emin olalım
-            if (!(selectedFile instanceof File)) {
-                console.error("selectedFile geçerli bir dosya nesnesi değil:", selectedFile);
-                showAlert("Geçersiz profil resmi dosyası. Varsayılan resim kullanılacak.", 'warning');
-                // selectedFile geçersizse, bu bloğu atlayıp varsayılan URL ile devam eder
-            } else {
-                try {
-                    // Dosya adını güvenli hale getir
-                    const safeFileName = selectedFile.name.replace(/[^a-zA-Z0-9.]/g, '_');
-                    const imageRef = storageRef(storage, `profile_pictures/${user.uid}/${safeFileName}`);
-
-                    showAlert("Profil resmi yükleniyor...", 'info', 3000); // Yükleme başladığında bilgi ver
-                    const uploadResult = await uploadBytes(imageRef, selectedFile);
-                    photoURL = await getDownloadURL(uploadResult.ref);
-                    showAlert("Profil resmi başarıyla yüklendi.", 'success', 2000);
-                } catch (storageError) {
-                    console.error("Profil resmi yüklenirken hata oluştu:", storageError);
-                    showAlert("Profil resmi yüklenirken bir hata oluştu. Varsayılan resim kullanılacak.", 'warning');
-                    // Hata oluşsa bile photoURL varsayılanda kalacak ve işlem devam edecek
-                }
+            // İlk olarak tüm temel alanların doldurulduğundan emin olalım
+            if (!name || !surname || isNaN(age) || !team || !position || !email || !password || !confirmPassword) {
+                showAlert("Lütfen tüm zorunlu alanları doldurun (yaş, takım, mevki, e-posta, şifre).", 'warning');
+                return;
             }
-        }
+            if (age < 10 || age > 99) {
+                 showAlert("Geçerli bir yaş girin (10-99 arası).", 'warning');
+                 return;
+            }
+            if (password.length < 6) {
+                showAlert("Şifre en az 6 karakter olmalı!", 'warning');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showAlert("Şifreler eşleşmiyor!", 'error');
+                return;
+            }
 
-        // Kullanıcı bilgilerini Realtime Database'e kaydet (yüklenen resmin URL'si veya varsayılan ile)
-        // Burada await kullanmak Realtime DB yazma işleminin bitmesini garanti eder
-        await set(ref(db, 'users/' + user.uid), {
-            name: name,
-            surname: surname,
-            age: age,
-            team: team,
-            position: position,
-            email: email,
-            profilePicture: photoURL // Burası yüklendiyse yeni URL, yüklenmediyse DEFAULT_AVATAR_URL olacak
+            try {
+                // Firebase Authentication ile kullanıcı oluştur
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Profil resmi artık sabit bir URL olacak
+                const photoURL = "https://i.imageupload.app/88899fc6eb188999f579.png";
+
+                // Kullanıcı bilgilerini Realtime Database'e kaydet (varsayılan resim URL'si ile)
+                await set(ref(db, 'users/' + user.uid), {
+                    name: name,
+                    surname: surname,
+                    age: age,
+                    team: team,
+                    position: position,
+                    email: email,
+                    profilePicture: photoURL
+                });
+
+                showAlert("Kayıt başarılı! Giriş yapabilirsiniz.", 'success');
+                authOverlay.classList.remove('show');
+                toggleAuthMode.click(); // Giriş formuna geri dön
+
+            } catch (authError) {
+                console.error("Kayıt veya kimlik doğrulama hatası:", authError);
+                let errorMessage = "Kayıt olurken bir hata oluştu.";
+                if (authError.code === 'auth/email-already-in-use') {
+                    errorMessage = "Bu e-posta adresi zaten kullanılıyor.";
+                } else if (authError.code === 'auth/invalid-email') {
+                    errorMessage = "Geçersiz e-posta adresi.";
+                } else if (authError.code === 'auth/weak-password') {
+                    errorMessage = "Şifre çok zayıf (en az 6 karakter).";
+                } else if (authError.code === 'auth/network-request-failed') {
+                    errorMessage = "Ağ hatası oluştu. Lütfen internet bağlantınızı kontrol edin.";
+                }
+                showAlert(errorMessage, 'error');
+            }
         });
-
-        showAlert("Kayıt başarılı! Giriş yapabilirsiniz.", 'success');
-        authOverlay.classList.remove('show');
-        toggleAuthMode.click(); // Giriş formuna geri dön
-
-    } catch (authError) {
-        console.error("Kayıt veya kimlik doğrulama hatası:", authError);
-        let errorMessage = "Kayıt olurken bir hata oluştu.";
-        if (authError.code === 'auth/email-already-in-use') {
-            errorMessage = "Bu e-posta adresi zaten kullanılıyor.";
-        } else if (authError.code === 'auth/invalid-email') {
-            errorMessage = "Geçersiz e-posta adresi.";
-        } else if (authError.code === 'auth/weak-password') {
-            errorMessage = "Şifre çok zayıf (en az 6 karakter).";
-        } else if (authError.code === 'auth/network-request-failed') {
-            errorMessage = "Ağ hatası oluştu. Lütfen internet bağlantınızı kontrol edin.";
-        }
-        showAlert(errorMessage, 'error');
-    }
-});
-
         loginUserBtn.addEventListener('click', async () => {
             const email = loginEmailInput.value.trim();
             const password = loginPasswordInput.value;
